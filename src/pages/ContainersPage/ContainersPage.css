@@ -1,0 +1,207 @@
+.containers-page {
+  padding: 30px;
+}
+
+.page-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0px 4px 52px rgba(0, 0, 0, 0.08);
+  padding: 18px 18px 12px 18px;
+}
+
+.card-top {
+  padding: 6px 6px 14px 6px;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.filter-pill {
+  background: #f3f3f3;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 12px;
+  color: #2b2b2b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pill-icon {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.add-btn {
+  margin-left: 6px;
+  background: #f3f3f3;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.add-btn:hover {
+  background: #dee33e;
+}
+
+.table {
+  border-top: 1px solid #f0f0f0;
+}
+
+.table-head,
+.table-row {
+  display: grid;
+  grid-template-columns: 110px 90px 160px 90px 90px 170px 110px 90px;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px;
+}
+
+.table-head {
+  color: #9a9a9a;
+  font-size: 12px;
+  padding-top: 16px;
+}
+
+.table-row {
+  border-top: 1px solid #f4f4f4;
+  font-size: 12px;
+  color: #111;
+  cursor: pointer;
+}
+
+.table-row:hover {
+  background: #fafafa;
+  border-radius: 14px;
+}
+
+.table-row.selected {
+  background: #f7f7f7;
+  border-radius: 14px;
+}
+
+.col {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.col.code {
+  font-weight: 700;
+}
+
+.col.name {
+  font-weight: 600;
+}
+
+.badge {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid #eaeaea;
+}
+
+.badge.filled {
+  background: #dee33e;
+  border-color: #dee33e;
+}
+
+.badge.empty {
+  background: #ffffff;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  border: none;
+  background: #f3f3f3;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn img {
+  width: 16px;
+  height: 16px;
+  opacity: 0.8;
+}
+
+.icon-btn:hover {
+  background: #dee33e;
+}
+.card-bottom {
+  margin-top: 12px;
+  padding: 8px 6px 6px 6px;
+  display: flex;
+  justify-content: center;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+/* звичайні цифри */
+.page-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #9aa0a6;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 4px 6px;
+}
+
+/* активна сторінка (маленький чорний квадратик) */
+.page-btn.active {
+  width: 30px;
+  height: 30px;
+  border-radius: 11px;
+  background: #111;
+  color: #dee33e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  padding: 0;
+}
+
+/* стрілки */
+.page-arrow {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #c2c6cc;
+  font-size: 20px;
+  padding: 0 4px;
+}
+
+.page-arrow.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.dots {
+  color: #9aa0a6;
+  font-size: 14px;
+}
