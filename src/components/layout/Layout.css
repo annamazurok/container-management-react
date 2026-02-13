@@ -1,6 +1,12 @@
+.layout {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    min-height: 100vh;
+}
+
 .side-panel{
     width: 250px;
-    height: 100vh;
     background-color: #ffffff;
     display: flex;
     flex-direction: column;
@@ -51,6 +57,13 @@
 
 .nav-img{
     margin-right: 10px;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
 }
 
 @media screen and (max-width: 1200px) {
