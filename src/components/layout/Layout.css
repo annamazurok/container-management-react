@@ -51,7 +51,16 @@
     border-radius: 15px;
 }
 
+.nav-link.active .nav-item {
+    background-color: #DEE33E;
+    border-radius: 15px;
+}
+
 .nav-item:hover .nav-img {
+    filter: brightness(0);
+}
+
+.nav-link.active .nav-img {
     filter: brightness(0);
 }
 
