@@ -1,29 +1,29 @@
 import "./Layout.css";
 
-export default function Layout() {
+export default function Layout({ children }) {
   return (
     <div className="layout">
       <div className="side-panel">
         <div className="logo-div">
-          <img className="logo" src="./public/Logo.svg" alt="Logo" />
+          <img className="logo" src="/Logo.svg" alt="Logo" />
         </div>
         <div className="nav-links">
           <div className="nav-item">
-            <img className="nav-img qr" src="./public/qr.svg" alt="qr" />
+            <img className="nav-img qr" src="/qr.svg" alt="qr" />
             <a className="nav-link" href="#">
               Scan QR
             </a>
           </div>
           <div className="nav-item">
-            <img className="nav-img box" src="./public/box.svg" alt="box" />
+            <img className="nav-img box" src="/box.svg" alt="box" />
             <a className="nav-link" href="#">
-              Container
+              Containers
             </a>
           </div>
           <div className="nav-item">
             <img
               className="nav-img shopping-basket"
-              src="./public/shopping-basket.svg"
+              src="/shopping-basket.svg"
               alt="shopping basket"
             />
             <a className="nav-link" href="#">
@@ -33,7 +33,7 @@ export default function Layout() {
           <div className="nav-item">
             <img
               className="nav-img users-alt"
-              src="./public/users-alt.svg"
+              src="/users-alt.svg"
               alt="users"
             />
             <a className="nav-link" href="#">
@@ -42,8 +42,8 @@ export default function Layout() {
           </div>
         </div>
       </div>
-      <div className="top-panel">
-        <a href="">dsc</a>
+      <div className="main-content">
+        {children}
       </div>
     </div>
   );

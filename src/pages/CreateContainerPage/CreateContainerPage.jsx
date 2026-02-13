@@ -45,14 +45,7 @@ export default function CreateContainerPage() {
         <h1 className="create-title">Create container</h1>
 
         <form className="create-form" onSubmit={handleSubmit}>
-          <div className="create-row">
-            <input
-              className="create-input"
-              name="code"
-              placeholder="Container code"
-              value={form.code}
-              onChange={handleChange}
-            />
+          <div className="create-row full">
 
             <input
               className="create-input"

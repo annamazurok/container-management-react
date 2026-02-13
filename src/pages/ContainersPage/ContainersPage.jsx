@@ -5,8 +5,7 @@ export default function ContainersPage() {
   const [selected, setSelected] = useState(null);
   const [sortBy, setSortBy] = useState(""); // "" | "type" | "state" | "date"
 
-  // ✅ Pagination
-  const [page, setPage] = useState(2); // старт як на скріні (2)
+  const [page, setPage] = useState(2);
   const pageSize = 6;
 
   const containers = [
@@ -72,7 +71,6 @@ export default function ContainersPage() {
     },
   ];
 
-  // НЕ міняю контейнерс — роблю копію і сортую
   let sorted = [...containers];
 
   if (sortBy === "type") {
@@ -102,7 +100,6 @@ export default function ContainersPage() {
     });
   }
 
-  // ✅ Pagination calculations
   const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize));
   const safePage = Math.min(Math.max(page, 1), totalPages);
 
