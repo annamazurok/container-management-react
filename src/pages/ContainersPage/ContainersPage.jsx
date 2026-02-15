@@ -3,7 +3,7 @@ import "./ContainersPage.css";
 
 export default function ContainersPage() {
   const [selected, setSelected] = useState(null);
-  const [sortBy, setSortBy] = useState(""); // "" | "type" | "state" | "date"
+  const [sortBy, setSortBy] = useState("");
 
   const [page, setPage] = useState(2);
   const pageSize = 6;
@@ -108,7 +108,6 @@ export default function ContainersPage() {
   const paged = sorted.slice(start, end);
 
   function buildPages(current, total) {
-    // показуємо: 1, (2..4 біля current), ..., total
     const result = [];
     const left = current - 1;
     const right = current + 2;
@@ -125,7 +124,6 @@ export default function ContainersPage() {
 
     if (total > 1) result.push(total);
 
-    // прибираємо дублікати типу 1,1
     return result.filter((x, idx) => result.indexOf(x) === idx);
   }
 
@@ -141,7 +139,6 @@ export default function ContainersPage() {
     setPage(safePage + 1);
   }
 
-  // якщо змінився sort і сторінок стало менше — підрівняємо
   if (safePage !== page) {
     setPage(safePage);
   }
