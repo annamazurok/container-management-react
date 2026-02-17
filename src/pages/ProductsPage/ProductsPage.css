@@ -73,7 +73,7 @@
 .products-card .table-head,
 .products-card .table-row {
   display: grid;
-  grid-template-columns: 180px 1fr 220px 140px;
+  grid-template-columns: 150px 200px 1fr 220px 140px;
   align-items: center;
   gap: 6px;
   padding: 12px 8px;
@@ -114,7 +114,6 @@
 
 .products-card .table-head .units {
   text-align: right;
-  padding-right: 60px;
 }
 
 .col.type {
@@ -124,8 +123,7 @@
 .col.units {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 10px;
+  justify-content: center;
 }
 
 .products-card .col.type-value {
@@ -184,4 +182,16 @@
 
 .icon-btn:hover {
   background: #dee33e;
+}
+
+.loading-message,
+.error-message {
+  padding: 40px;
+  text-align: center;
+  font-size: 16px;
+  color: #666;
+}
+
+.error-message {
+  color: #d32f2f;
 }

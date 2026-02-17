@@ -1,54 +1,38 @@
 import { useMemo, useState } from "react";
 import "./ProductsPage.css";
+import { useProducts } from "../../hooks/useProducts";
+import { useProductTypes } from "../../hooks/useProductTypes";
+import { deleteProduct } from "../../services/api/products";
+import { useNavigate } from "react-router-dom";
 
 export default function ProductsPage() {
+  const navigate = useNavigate();
   const [selected, setSelected] = useState(null);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [deleting, setDeleting] = useState(false);
 
   const pageSize = 6;
 
-  const products = useMemo(
-    () => [
-      {
-        id: 1,
-        type: "Red Wine",
-        description: "An assortment of Cabernet, Merlot",
-        units: 40,
-      },
-      {
-        id: 2,
-        type: "Cider",
-        description: "Sparkling apple cider beverage",
-        units: 10,
-      },
-      {
-        id: 3,
-        type: "Apple Juice",
-        description: "Fresh pressed apple juice",
-        units: 20,
-      },
-      {
-        id: 4,
-        type: "White Wine",
-        description: "An assortment of Chardonnay, Sauvignon Blanc",
-        units: 40,
-      },
-      {
-        id: 5,
-        type: "Water",
-        description: "Still water 0.5L",
-        units: 10,
-      },
-      {
-        id: 6,
-        type: "Lemonade",
-        description: "Homemade sparkling lemonade",
-        units: 18,
-      },
-    ],
-    [],
-  );
+  const { products: apiProducts, loading, error, refetch } = useProducts();
+  const { productTypes, loading: typesLoading } = useProductTypes();
+
+  const products = useMemo(() => {
+    if (typesLoading) return [];
+    
+    return apiProducts.map((product) => {
+      const type = productTypes.find(t => t.id === product.typeId);
+      
+      return {
+        id: product.id,
+        name: product.name || product.Name,
+        type: type?.title || type?.Title || "Unknown",
+        description: product.description || product.Description || "-",
+        produced: product.produced,
+        expirationDate: product.expirationDate,
+      };
+    });
+  }, [apiProducts, productTypes, typesLoading]);
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
@@ -56,6 +40,7 @@ export default function ProductsPage() {
 
     return products.filter((p) => {
       return (
+        p.name.toLowerCase().includes(q) ||
         p.type.toLowerCase().includes(q) ||
         p.description.toLowerCase().includes(q)
       );
@@ -74,17 +59,29 @@ export default function ProductsPage() {
   }
 
   function handleEdit(id) {
-    alert("Edit product: " + id);
+    navigate(`/products/edit/${id}`);
   }
 
-  function handleDelete(id) {
-    const ok = confirm("Delete product?");
-    if (!ok) return;
-    alert("Deleted product: " + id);
+  async function handleDelete(id) {
+    if (deleting) return;
+
+    const confirmed = window.confirm("Are you sure you want to delete this product?");
+    if (!confirmed) return;
+
+    setDeleting(true);
+    try {
+      await deleteProduct(id);
+      await refetch();
+      alert("Product deleted successfully!");
+    } catch (err) {
+      alert("Failed to delete product: " + err.message);
+    } finally {
+      setDeleting(false);
+    }
   }
 
   function handleView(id) {
-    alert("View product: " + id);
+    navigate(`/products/${id}/containers`);
   }
 
   function goPrev() {
@@ -96,6 +93,30 @@ export default function ProductsPage() {
   }
 
   if (page > totalPages) setPage(totalPages);
+
+  if (loading || typesLoading) {
+    return (
+      <div className="products-page">
+        <div className="products-wrapper">
+          <div className="products-card">
+            <div className="loading-message">Loading products...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="products-page">
+        <div className="products-wrapper">
+          <div className="products-card">
+            <div className="error-message">Error: {error}</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="products-page">
@@ -129,6 +150,7 @@ export default function ProductsPage() {
           <div className="table">
             <div className="table-head">
               <div className="col type">Type</div>
+              <div className="col name">Name</div>
               <div className="col desc">Description</div>
               <div className="col units">Units</div>
               <div className="col actions-head">Actions</div>
@@ -143,10 +165,10 @@ export default function ProductsPage() {
                 onClick={() => setSelected(item.id)}
               >
                 <div className="col type-value">{item.type}</div>
+                <div className="col name-value">{item.name}</div>
                 <div className="col desc-value">{item.description}</div>
 
                 <div className="col units">
-                  <span className="units-badge">{item.units} units</span>
                   <button
                     className="view-btn"
                     type="button"
@@ -180,6 +202,7 @@ export default function ProductsPage() {
                       e.stopPropagation();
                       handleDelete(item.id);
                     }}
+                    disabled={deleting}
                   >
                     <img src="/trash.svg" alt="delete" />
                   </button>

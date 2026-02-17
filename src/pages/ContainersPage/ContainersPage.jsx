@@ -1,103 +1,71 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import "./ContainersPage.css";
+import { useContainers } from "../../hooks/useContainers";
+import { useContainerTypes } from "../../hooks/useContainerTypes";
+import { useProducts } from "../../hooks/useProducts";
+import { useProductTypes } from "../../hooks/useProductTypes";
+import { useUnits } from "../../hooks/useUnits";
+import { deleteContainer } from "../../services/api/containers";
+import { NavLink } from "react-router-dom";
 
 export default function ContainersPage() {
   const [selected, setSelected] = useState(null);
   const [sortBy, setSortBy] = useState("");
+  const [deleting, setDeleting] = useState(false);
 
   const [page, setPage] = useState(2);
   const pageSize = 6;
 
-  const containers = [
-    {
-      id: 1,
-      code: "TARA-12345",
-      type: "Barrel",
-      name: "Wine barrel",
-      volume: "200 L",
-      state: "Filled",
-      product: "Red wine 2023",
-      date: "15.01.2026",
-    },
-    {
-      id: 2,
-      code: "TARA-34526",
-      type: "Container",
-      name: "Plastic container",
-      volume: "100 L",
-      state: "Empty",
-      product: "Apple juice",
-      date: "-",
-    },
-    {
-      id: 3,
-      code: "TARA-09876",
-      type: "Barrel",
-      name: "Barrel number 3",
-      volume: "150 L",
-      state: "Filled",
-      product: "Sour cherry compote",
-      date: "-",
-    },
-    {
-      id: 4,
-      code: "TARA-43215",
-      type: "Barrel",
-      name: "Old barrel",
-      volume: "300 L",
-      state: "Filled",
-      product: "White wine",
-      date: "07.01.2026",
-    },
-    {
-      id: 5,
-      code: "TARA-56789",
-      type: "Container",
-      name: "Container number 2",
-      volume: "125 L",
-      state: "Empty",
-      product: "Cherry juice",
-      date: "-",
-    },
-    {
-      id: 6,
-      code: "TARA-34567",
-      type: "Barrel",
-      name: "Wine container",
-      volume: "200 L",
-      state: "Empty",
-      product: "White wine",
-      date: "-",
-    },
-  ];
+  const { containers: apiContainers, loading, error, refetch } = useContainers();
+  const { containerTypes, loading: typesLoading } = useContainerTypes();
+  const { products, loading: productsLoading } = useProducts();
+  const { productTypes, loading: productTypesLoading } = useProductTypes();
+  const { units, loading: unitsLoading } = useUnits();
+
+  const containers = useMemo(() => {
+    if (typesLoading || productsLoading || productTypesLoading || unitsLoading) return [];
+    
+    return apiContainers.map((container) => {
+      const type = containerTypes.find(t => t.id === container.typeId);
+      const product = products.find(p => p.id === container.productId);
+      const unit = units.find(u => u.id === container.unitId);
+      
+      let productDisplay = "-";
+      if (product) {
+        const productName = product.name || product.Name;
+        productDisplay = productName && productName.trim() ? productName : "-";
+      }
+      
+      return {
+        id: container.id,
+        code: container.code,
+        type: type?.name || type?.Name || "Unknown",
+        name: container.name || container.Name,
+        volume: container.quantity && unit
+          ? `${container.quantity} ${unit.title || unit.Title}` 
+          : "-",
+        state: container.status ?? "Default",
+        product: productDisplay,
+      };
+    });
+  }, [apiContainers, containerTypes, products, productTypes, units, typesLoading, productsLoading, productTypesLoading, unitsLoading]);
 
   let sorted = [...containers];
 
-  if (sortBy === "type") {
-    sorted.sort((a, b) => {
-      if (a.type === "Barrel" && b.type !== "Barrel") return -1;
-      if (a.type !== "Barrel" && b.type === "Barrel") return 1;
-      return 0;
-    });
+  const getBadgeClass = (status) => {
+    if (!status) return "empty";
+    const normalizedStatus = String(status).toLowerCase();
+    if (normalizedStatus === "active" || normalizedStatus === "1") return "filled";
+    if (normalizedStatus === "inactive" || normalizedStatus === "default" || normalizedStatus === "0" || normalizedStatus === "2") return "empty";
+    return normalizedStatus;
+  };
+
+  if (sortBy === "type-asc") {
+    sorted.sort((a, b) => a.type.localeCompare(b.type));
   }
 
-  if (sortBy === "state") {
-    sorted.sort((a, b) => {
-      if (a.state === "Filled" && b.state !== "Filled") return -1;
-      if (a.state !== "Filled" && b.state === "Filled") return 1;
-      return 0;
-    });
-  }
-
-  if (sortBy === "date") {
-    sorted.sort((a, b) => {
-      const aHasDate = a.date !== "-";
-      const bHasDate = b.date !== "-";
-
-      if (aHasDate && !bHasDate) return -1;
-      if (!aHasDate && bHasDate) return 1;
-      return 0;
-    });
+  if (sortBy === "type-desc") {
+    sorted.sort((a, b) => b.type.localeCompare(a.type));
   }
 
   const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize));
@@ -139,8 +107,56 @@ export default function ContainersPage() {
     setPage(safePage + 1);
   }
 
+  function handleTypeSort() {
+    if (sortBy === "") {
+      setSortBy("type-asc");
+    } else if (sortBy === "type-asc") {
+      setSortBy("type-desc");
+    } else {
+      setSortBy("");
+    }
+  }
+
+  async function handleDelete(id) {
+    if (deleting) return;
+
+    const confirmed = window.confirm("Are you sure you want to delete this container?");
+    if (!confirmed) return;
+
+    setDeleting(true);
+    try {
+      await deleteContainer(id);
+      await refetch();
+      alert("Container deleted successfully!");
+    } catch (err) {
+      alert("Failed to delete container: " + err.message);
+    } finally {
+      setDeleting(false);
+    }
+  }
+
   if (safePage !== page) {
     setPage(safePage);
+  }
+
+  if (loading || typesLoading || productsLoading || productTypesLoading || unitsLoading) {
+    return (
+      <div className="containers-page">
+        <div className="page-card">
+          <div className="loading-message">Loading containers...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="containers-page">
+        <div className="page-card">
+          <div className="error-message">Error: {error}</div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -149,32 +165,20 @@ export default function ContainersPage() {
         <div className="card-top">
           <div className="filters">
             <button
-              className={"filter-pill " + (sortBy === "type" ? "active" : "")}
+              className={"filter-pill " + (sortBy.startsWith("type") ? "active" : "")}
               type="button"
-              onClick={() => setSortBy("type")}
+              onClick={handleTypeSort}
             >
               Type <span className="pill-icon">⇅</span>
             </button>
 
-            <button
-              className={"filter-pill " + (sortBy === "state" ? "active" : "")}
-              type="button"
-              onClick={() => setSortBy("state")}
-            >
-              State <span className="pill-icon">⇅</span>
-            </button>
+            <NavLink className="add-link" to="/containers/new">
+              <div className="add-btn" type="button">
+                + Add Container
+              </div>
+          </NavLink>
 
-            <button
-              className={"filter-pill " + (sortBy === "date" ? "active" : "")}
-              type="button"
-              onClick={() => setSortBy("date")}
-            >
-              Date <span className="pill-icon">⇅</span>
-            </button>
 
-            <button className="add-btn" type="button">
-              + Add Container
-            </button>
           </div>
         </div>
 
@@ -186,7 +190,6 @@ export default function ContainersPage() {
             <div className="col">Volume</div>
             <div className="col">State</div>
             <div className="col">Product/Last</div>
-            <div className="col">Process date</div>
             <div className="col actions"></div>
           </div>
 
@@ -204,24 +207,28 @@ export default function ContainersPage() {
               <div className="col">{item.volume}</div>
 
               <div className="col">
-                <span
-                  className={
-                    "badge " + (item.state === "Filled" ? "filled" : "empty")
-                  }
-                >
+                <span className={"badge " + getBadgeClass(item.state)}>
                   {item.state}
                 </span>
               </div>
 
               <div className="col">{item.product}</div>
-              <div className="col">{item.date}</div>
 
               <div className="col actions">
                 <button className="icon-btn" type="button" title="Edit">
                   <img src="/edit.svg" alt="edit" />
                 </button>
 
-                <button className="icon-btn" type="button" title="Delete">
+                <button 
+                  className="icon-btn" 
+                  type="button" 
+                  title="Delete"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(item.id);
+                  }}
+                  disabled={deleting}
+                >
                   <img src="/trash.svg" alt="delete" />
                 </button>
               </div>

@@ -12,12 +12,19 @@ export default function Layout() {
 
 
 
-          <Link className="nav-link" to="#">
+          <NavLink className="nav-link" to="/products/new">
             <div className="nav-item">
               <img className="nav-img qr" src="/qr.svg" alt="qr" />
-                Scan QR
+                Create product
             </div>
-          </Link>
+          </NavLink>
+
+          <NavLink className="nav-link" to="/containers/new">
+            <div className="nav-item">
+              <img className="nav-img qr" src="/qr.svg" alt="qr" />
+                Create container
+            </div>
+          </NavLink>
 
 
 
@@ -40,7 +47,7 @@ export default function Layout() {
           </NavLink>
 
 
-          <Link className="nav-link" to="#">
+          <NavLink className="nav-link" to="/users">
             <div className="nav-item">
               <img
                 className="nav-img users-alt"
@@ -49,7 +56,7 @@ export default function Layout() {
               />
                 Users
             </div>
-          </Link>
+          </NavLink>
 
 
 

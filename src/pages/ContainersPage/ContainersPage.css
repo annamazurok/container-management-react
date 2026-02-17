@@ -52,6 +52,11 @@
   cursor: pointer;
 }
 
+.add-link{
+  text-decoration: none;
+  color: black;
+}
+
 .add-btn:hover {
   background: #dee33e;
 }
@@ -63,7 +68,7 @@
 .table-head,
 .table-row {
   display: grid;
-  grid-template-columns: 110px 90px 160px 90px 90px 170px 110px 90px;
+  grid-template-columns: 100px 120px 160px 150px 90px 130px 90px;
   align-items: center;
   gap: 6px;
   padding: 12px 8px;
@@ -96,6 +101,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-width: 0;
 }
 
 .col.code {
@@ -104,6 +110,7 @@
 
 .col.name {
   font-weight: 600;
+  max-width: 160px;
 }
 
 .badge {
@@ -206,4 +213,16 @@
 .dots {
   color: #9aa0a6;
   font-size: 14px;
+}
+
+.loading-message,
+.error-message {
+  padding: 40px;
+  text-align: center;
+  font-size: 16px;
+  color: #666;
+}
+
+.error-message {
+  color: #d32f2f;
 }
