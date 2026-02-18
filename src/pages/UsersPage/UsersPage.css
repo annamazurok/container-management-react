@@ -5,6 +5,7 @@
   justify-content: center;
   align-items: center;
   padding: 26px 18px;
+  font-family: "Urbanist", sans-serif;
 }
 
 .page-card {
@@ -24,23 +25,24 @@
 }
 
 .search-wrap {
-  flex: 1;
-  height: 42px;
   background: #f3f3f3;
+  border: none;
+  padding: 9px 14px;
   border-radius: 12px;
+  font-size: 12px;
+  color: #2b2b2b;
   display: flex;
   align-items: center;
-  padding: 0 14px;
-  gap: 10px;
+  gap: 8px;
+  width: 800px;
 }
 
 .search-input {
   border: none;
-  outline: none;
   background: transparent;
   width: 100%;
-  font-size: 13px;
-  color: #2b2b2b;
+  font-size: 12px;
+  outline: none;
 }
 
 .add-users-btn {
@@ -182,6 +184,12 @@
   color: #111;
 }
 
+.empty-state {
+  padding: 18px 8px;
+  color: #777;
+  font-size: 12px;
+}
+
 .card-bottom {
   margin-top: 12px;
   padding: 8px 6px 6px 6px;
@@ -235,4 +243,178 @@
 .dots {
   color: #9aa0a6;
   font-size: 14px;
+}
+
+.desktop-only {
+  display: block;
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .layout .side-panel {
+    display: none;
+  }
+
+  .layout .main-content {
+    width: 100%;
+  }
+
+  .users-page {
+    width: 100%;
+    justify-content: flex-start;
+    align-items: stretch;
+    padding: 18px 14px 92px 14px;
+  }
+
+  .page-card {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .users-top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .search-wrap {
+    width: 100%;
+  }
+
+  .add-users-btn {
+    width: 100%;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: block;
+  }
+
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 8px;
+  }
+
+  .user-card {
+    border: 1px solid #f0f0f0;
+    border-radius: 16px;
+    padding: 12px;
+    background: #fff;
+    cursor: pointer;
+  }
+
+  .user-card:hover {
+    background: #fafafa;
+  }
+
+  .user-card.selected {
+    background: #f7f7f7;
+    border-color: #ececec;
+  }
+
+  .user-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .user-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .user-no {
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+    background: #f3f3f3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    color: #6f6f6f;
+    flex: 0 0 auto;
+  }
+
+  .user-name-mobile {
+    font-size: 13px;
+    font-weight: 800;
+    color: #111;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .user-email {
+    font-size: 12px;
+    color: #444;
+    margin-bottom: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .user-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .role-pill,
+  .status-pill {
+    border-radius: 999px;
+    padding: 7px 10px;
+    font-size: 11px;
+    font-weight: 800;
+    background: #f3f3f3;
+    color: #111;
+    white-space: nowrap;
+  }
+
+  .role-pill.admin {
+    background: #6b7280;
+    color: #fff;
+  }
+
+  .role-pill.operator {
+    background: #dee33e;
+    color: #111;
+  }
+
+  .status-pill.approved {
+    background: #ffffff;
+    border: 1px solid #eaeaea;
+  }
+
+  .status-pill.pending {
+    background: #f3f3f3;
+    color: #7a7a7a;
+  }
+
+  .user-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .icon-btn.only-ico {
+    width: 34px;
+    padding: 0;
+  }
 }

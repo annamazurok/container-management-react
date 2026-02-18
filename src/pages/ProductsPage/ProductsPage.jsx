@@ -19,10 +19,10 @@ export default function ProductsPage() {
 
   const products = useMemo(() => {
     if (typesLoading) return [];
-    
+
     return apiProducts.map((product) => {
-      const type = productTypes.find(t => t.id === product.typeId);
-      
+      const type = productTypes.find((t) => t.id === product.typeId);
+
       return {
         id: product.id,
         name: product.name || product.Name,
@@ -65,7 +65,9 @@ export default function ProductsPage() {
   async function handleDelete(id) {
     if (deleting) return;
 
-    const confirmed = window.confirm("Are you sure you want to delete this product?");
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this product?",
+    );
     if (!confirmed) return;
 
     setDeleting(true);
@@ -147,10 +149,9 @@ export default function ProductsPage() {
             </div>
           </div>
 
-          <div className="table">
+          <div className="table desktop-only">
             <div className="table-head">
               <div className="col type">Type</div>
-              <div className="col name">Name</div>
               <div className="col desc">Description</div>
               <div className="col units">Units</div>
               <div className="col actions-head">Actions</div>
@@ -165,10 +166,11 @@ export default function ProductsPage() {
                 onClick={() => setSelected(item.id)}
               >
                 <div className="col type-value">{item.type}</div>
-                <div className="col name-value">{item.name}</div>
                 <div className="col desc-value">{item.description}</div>
 
                 <div className="col units">
+                  <span className="units-badge">{item.units} units</span>
+
                   <button
                     className="view-btn"
                     type="button"
@@ -202,7 +204,6 @@ export default function ProductsPage() {
                       e.stopPropagation();
                       handleDelete(item.id);
                     }}
-                    disabled={deleting}
                   >
                     <img src="/trash.svg" alt="delete" />
                   </button>
@@ -213,6 +214,70 @@ export default function ProductsPage() {
             {pageItems.length === 0 && (
               <div className="empty-state">No products found.</div>
             )}
+          </div>
+
+          <div className="mobile-only">
+            <div className="cards">
+              {pageItems.map((item) => (
+                <div
+                  key={item.id}
+                  className={
+                    "product-card " + (selected === item.id ? "selected" : "")
+                  }
+                  onClick={() => setSelected(item.id)}
+                >
+                  <div className="product-card-top">
+                    <div className="product-title">{item.type}</div>
+                    <span className="units-pill">{item.units} units</span>
+                  </div>
+
+                  <div className="product-desc">{item.description}</div>
+
+                  <div className="product-actions">
+                    <button
+                      className="btn-soft"
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleView(item.id);
+                      }}
+                    >
+                      View
+                    </button>
+
+                    <div className="action-icons">
+                      <button
+                        className="icon-btn"
+                        type="button"
+                        title="Edit"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEdit(item.id);
+                        }}
+                      >
+                        <img src="/edit.svg" alt="edit" />
+                      </button>
+
+                      <button
+                        className="icon-btn"
+                        type="button"
+                        title="Delete"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(item.id);
+                        }}
+                      >
+                        <img src="/trash.svg" alt="delete" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              {pageItems.length === 0 && (
+                <div className="empty-state">No products found.</div>
+              )}
+            </div>
           </div>
 
           <div className="card-bottom">

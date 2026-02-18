@@ -16,47 +16,71 @@ export default function ContainersPage() {
   const [page, setPage] = useState(2);
   const pageSize = 6;
 
-  const { containers: apiContainers, loading, error, refetch } = useContainers();
+  const {
+    containers: apiContainers,
+    loading,
+    error,
+    refetch,
+  } = useContainers();
   const { containerTypes, loading: typesLoading } = useContainerTypes();
   const { products, loading: productsLoading } = useProducts();
   const { productTypes, loading: productTypesLoading } = useProductTypes();
   const { units, loading: unitsLoading } = useUnits();
 
   const containers = useMemo(() => {
-    if (typesLoading || productsLoading || productTypesLoading || unitsLoading) return [];
-    
+    if (typesLoading || productsLoading || productTypesLoading || unitsLoading)
+      return [];
+
     return apiContainers.map((container) => {
-      const type = containerTypes.find(t => t.id === container.typeId);
-      const product = products.find(p => p.id === container.productId);
-      const unit = units.find(u => u.id === container.unitId);
-      
+      const type = containerTypes.find((t) => t.id === container.typeId);
+      const product = products.find((p) => p.id === container.productId);
+      const unit = units.find((u) => u.id === container.unitId);
+
       let productDisplay = "-";
       if (product) {
         const productName = product.name || product.Name;
         productDisplay = productName && productName.trim() ? productName : "-";
       }
-      
+
       return {
         id: container.id,
         code: container.code,
         type: type?.name || type?.Name || "Unknown",
         name: container.name || container.Name,
-        volume: container.quantity && unit
-          ? `${container.quantity} ${unit.title || unit.Title}` 
-          : "-",
+        volume:
+          container.quantity && unit
+            ? `${container.quantity} ${unit.title || unit.Title}`
+            : "-",
         state: container.status ?? "Default",
         product: productDisplay,
       };
     });
-  }, [apiContainers, containerTypes, products, productTypes, units, typesLoading, productsLoading, productTypesLoading, unitsLoading]);
+  }, [
+    apiContainers,
+    containerTypes,
+    products,
+    productTypes,
+    units,
+    typesLoading,
+    productsLoading,
+    productTypesLoading,
+    unitsLoading,
+  ]);
 
   let sorted = [...containers];
 
   const getBadgeClass = (status) => {
     if (!status) return "empty";
     const normalizedStatus = String(status).toLowerCase();
-    if (normalizedStatus === "active" || normalizedStatus === "1") return "filled";
-    if (normalizedStatus === "inactive" || normalizedStatus === "default" || normalizedStatus === "0" || normalizedStatus === "2") return "empty";
+    if (normalizedStatus === "active" || normalizedStatus === "1")
+      return "filled";
+    if (
+      normalizedStatus === "inactive" ||
+      normalizedStatus === "default" ||
+      normalizedStatus === "0" ||
+      normalizedStatus === "2"
+    )
+      return "empty";
     return normalizedStatus;
   };
 
@@ -120,7 +144,9 @@ export default function ContainersPage() {
   async function handleDelete(id) {
     if (deleting) return;
 
-    const confirmed = window.confirm("Are you sure you want to delete this container?");
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this container?",
+    );
     if (!confirmed) return;
 
     setDeleting(true);
@@ -139,7 +165,13 @@ export default function ContainersPage() {
     setPage(safePage);
   }
 
-  if (loading || typesLoading || productsLoading || productTypesLoading || unitsLoading) {
+  if (
+    loading ||
+    typesLoading ||
+    productsLoading ||
+    productTypesLoading ||
+    unitsLoading
+  ) {
     return (
       <div className="containers-page">
         <div className="page-card">
@@ -165,7 +197,9 @@ export default function ContainersPage() {
         <div className="card-top">
           <div className="filters">
             <button
-              className={"filter-pill " + (sortBy.startsWith("type") ? "active" : "")}
+              className={
+                "filter-pill " + (sortBy.startsWith("type") ? "active" : "")
+              }
               type="button"
               onClick={handleTypeSort}
             >
@@ -176,13 +210,11 @@ export default function ContainersPage() {
               <div className="add-btn" type="button">
                 + Add Container
               </div>
-          </NavLink>
-
-
+            </NavLink>
           </div>
         </div>
 
-        <div className="table">
+        <div className="table desktop-only">
           <div className="table-head">
             <div className="col">Code</div>
             <div className="col">Type</div>
@@ -219,9 +251,9 @@ export default function ContainersPage() {
                   <img src="/edit.svg" alt="edit" />
                 </button>
 
-                <button 
-                  className="icon-btn" 
-                  type="button" 
+                <button
+                  className="icon-btn"
+                  type="button"
                   title="Delete"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -234,6 +266,62 @@ export default function ContainersPage() {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="mobile-only">
+          <div className="cards">
+            {paged.map((item) => (
+              <div
+                key={item.id}
+                className={
+                  "container-card " + (selected === item.id ? "selected" : "")
+                }
+                onClick={() => setSelected(item.id)}
+              >
+                <div className="container-card-top">
+                  <div className="container-title">
+                    <div className="code-strong">{item.code}</div>
+                    <div className="type-soft">{item.type}</div>
+                  </div>
+
+                  <span className={"badge " + getBadgeClass(item.state)}>
+                    {item.state}
+                  </span>
+                </div>
+
+                <div className="container-name">{item.name}</div>
+
+                <div className="container-pills">
+                  <span className="meta-pill">Vol: {item.volume}</span>
+                  <span className="meta-pill meta-strong">{item.product}</span>
+                </div>
+
+                <div className="container-actions">
+                  <button
+                    className="icon-btn"
+                    type="button"
+                    title="Edit"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <img src="/edit.svg" alt="edit" />
+                  </button>
+
+                  <button
+                    className="icon-btn"
+                    type="button"
+                    title="Delete"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(item.id);
+                    }}
+                    disabled={deleting}
+                  >
+                    <img src="/trash.svg" alt="delete" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="card-bottom">

@@ -9,24 +9,12 @@ export default function Layout() {
           <img className="logo" src="/Logo.svg" alt="Logo" />
         </div>
         <div className="nav-links">
-
-
-
-          <NavLink className="nav-link" to="/products/new">
+          <Link className="nav-link" to="#">
             <div className="nav-item">
               <img className="nav-img qr" src="/qr.svg" alt="qr" />
-                Create product
+              Scan QR
             </div>
-          </NavLink>
-
-          <NavLink className="nav-link" to="/containers/new">
-            <div className="nav-item">
-              <img className="nav-img qr" src="/qr.svg" alt="qr" />
-                Create container
-            </div>
-          </NavLink>
-
-
+          </Link>
 
           <NavLink className="nav-link" to="/containers" end>
             <div className="nav-item">
@@ -42,28 +30,57 @@ export default function Layout() {
                 src="/shopping-basket.svg"
                 alt="shopping basket"
               />
-                Products
+              Products
             </div>
           </NavLink>
 
-
-          <NavLink className="nav-link" to="/users">
+          <Link className="nav-link" to="#">
             <div className="nav-item">
               <img
                 className="nav-img users-alt"
                 src="/users-alt.svg"
                 alt="users"
               />
-                Users
+              Users
             </div>
-          </NavLink>
-
-
-
+          </Link>
         </div>
       </div>
       <div className="main-content">
         <Outlet />
+      </div>
+      <div className="bottom-nav">
+        <NavLink className="bottom-link" to="#" end>
+          <div className="bottom-item">
+            <img className="bottom-ico" src="/qr.svg" alt="qr" />
+            <span>Scan</span>
+          </div>
+        </NavLink>
+
+        <NavLink className="bottom-link" to="/containers" end>
+          <div className="bottom-item">
+            <img className="bottom-ico" src="/box.svg" alt="box" />
+            <span>Containers</span>
+          </div>
+        </NavLink>
+
+        <NavLink className="bottom-link" to="/" end>
+          <div className="bottom-item">
+            <img
+              className="bottom-ico"
+              src="/shopping-basket.svg"
+              alt="products"
+            />
+            <span>Products</span>
+          </div>
+        </NavLink>
+
+        <NavLink className="bottom-link" to="/users" end>
+          <div className="bottom-item">
+            <img className="bottom-ico" src="/users-alt.svg" alt="users" />
+            <span>Users</span>
+          </div>
+        </NavLink>
       </div>
     </div>
   );

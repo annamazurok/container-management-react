@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import "./UsersPage.css";
 
 export default function UsersPage() {
@@ -6,47 +6,51 @@ export default function UsersPage() {
   const [page, setPage] = useState(2);
   const [selected, setSelected] = useState(null);
 
-  const pageSize = 6;
+  const pageSize = window.innerWidth <= 900 ? 4 : 6;
 
-  const users = [
-    {
-      id: 1,
-      name: "Anna Mazurok",
-      email: "annamazurok@gmail.com",
-      role: "Admin",
-      status: "Approved",
-    },
-    {
-      id: 2,
-      name: "Samantha Verdoes",
-      email: "samanthaverdoes@gmail.com",
-      role: "Operator",
-      status: "Pending",
-    },
-    {
-      id: 3,
-      name: "Roman Nikitchuk",
-      email: "romannikitchuk@gmail.com",
-      role: "Operator",
-      status: "Pending",
-    },
-    {
-      id: 4,
-      name: "Natalia Radchuk",
-      email: "nataliaradchuk@gmail.com",
-      role: "Operator",
-      status: "Pending",
-    },
-  ];
+  const users = useMemo(
+    () => [
+      {
+        id: 1,
+        name: "Anna Mazurok",
+        email: "annamazurok@gmail.com",
+        role: "Admin",
+        status: "Approved",
+      },
+      {
+        id: 2,
+        name: "Samantha Verdoes",
+        email: "samanthaverdoes@gmail.com",
+        role: "Operator",
+        status: "Pending",
+      },
+      {
+        id: 3,
+        name: "Roman Nikitchuk",
+        email: "romannikitchuk@gmail.com",
+        role: "Operator",
+        status: "Pending",
+      },
+      {
+        id: 4,
+        name: "Natalia Radchuk",
+        email: "nataliaradchuk@gmail.com",
+        role: "Operator",
+        status: "Pending",
+      },
+    ],
+    [],
+  );
 
-  const filtered = users.filter((u) => {
+  const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return true;
-
-    return (
-      u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
-    );
-  });
+    if (!q) return users;
+    return users.filter((u) => {
+      return (
+        u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
+      );
+    });
+  }, [users, search]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const safePage = Math.min(Math.max(page, 1), totalPages);
@@ -97,9 +101,21 @@ export default function UsersPage() {
     setPage(1);
   }
 
-  if (safePage !== page) {
-    setPage(safePage);
+  function handleAdd() {
+    alert("Open create users page");
   }
+
+  function handleEdit(id) {
+    alert("Edit user: " + id);
+  }
+
+  function handleDelete(id) {
+    const ok = confirm("Delete user?");
+    if (!ok) return;
+    alert("Deleted user: " + id);
+  }
+
+  if (safePage !== page) setPage(safePage);
 
   return (
     <div className="users-page">
@@ -116,13 +132,12 @@ export default function UsersPage() {
             />
           </div>
 
-          <button className="add-users-btn" type="button">
+          <button className="add-users-btn" type="button" onClick={handleAdd}>
             + Add Users
           </button>
         </div>
 
-        {/* TABLE */}
-        <div className="table">
+        <div className="table desktop-only">
           <div className="table-head users-grid">
             <div className="col">No</div>
             <div className="col">User Name</div>
@@ -168,16 +183,117 @@ export default function UsersPage() {
               </div>
 
               <div className="col actions">
-                <button className="icon-btn" type="button" title="Edit">
+                <button
+                  className="icon-btn"
+                  type="button"
+                  title="Edit"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEdit(u.id);
+                  }}
+                >
                   <img src="/edit.svg" alt="edit" />
+                  <span className="btn-text"></span>
                 </button>
 
-                <button className="icon-btn" type="button" title="Delete">
+                <button
+                  className="icon-btn"
+                  type="button"
+                  title="Delete"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(u.id);
+                  }}
+                >
                   <img src="/trash.svg" alt="delete" />
+                  <span className="btn-text"></span>
                 </button>
               </div>
             </div>
           ))}
+
+          {paged.length === 0 && (
+            <div className="empty-state">No users found.</div>
+          )}
+        </div>
+
+        <div className="mobile-only">
+          <div className="cards">
+            {paged.map((u, idx) => (
+              <div
+                key={u.id}
+                className={"user-card " + (selected === u.id ? "selected" : "")}
+                onClick={() => setSelected(u.id)}
+              >
+                <div className="user-card-top">
+                  <div className="user-title">
+                    <div className="user-no">{getRowNo(idx)}</div>
+                    <div className="user-name-mobile">{u.name}</div>
+                  </div>
+
+                  <span
+                    className={
+                      "status-badge " +
+                      (u.status === "Approved" ? "approved" : "pending")
+                    }
+                  >
+                    {u.status}
+                  </span>
+                </div>
+
+                <div className="user-email">{u.email}</div>
+
+                <div className="user-pills">
+                  <span
+                    className={
+                      "role-pill " + (u.role === "Admin" ? "admin" : "operator")
+                    }
+                  >
+                    {u.role}
+                  </span>
+
+                  <span
+                    className={
+                      "status-pill " +
+                      (u.status === "Approved" ? "approved" : "pending")
+                    }
+                  >
+                    {u.status}
+                  </span>
+                </div>
+
+                <div className="user-actions">
+                  <button
+                    className="icon-btn only-ico"
+                    type="button"
+                    title="Edit"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEdit(u.id);
+                    }}
+                  >
+                    <img src="/edit.svg" alt="edit" />
+                  </button>
+
+                  <button
+                    className="icon-btn only-ico"
+                    type="button"
+                    title="Delete"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(u.id);
+                    }}
+                  >
+                    <img src="/trash.svg" alt="delete" />
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            {paged.length === 0 && (
+              <div className="empty-state">No users found.</div>
+            )}
+          </div>
         </div>
 
         <div className="card-bottom">
