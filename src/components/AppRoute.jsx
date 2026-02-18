@@ -9,11 +9,26 @@ import CreateContainerPage from "../pages/CreateContainerPage/CreateContainerPag
 import UsersPage from "../pages/UsersPage/UsersPage";
 import ContainerDetailsPage from "../pages/ContainerDetailsPage/ContainerDetailsPage";
 import ContainerHistoryPage from "../pages/ContainerHistoryPage/ContainerHistoryPage";
+import Login from "../pages/Login";
+import ProtectedRoute from "./ProtectedRoute";
+
 
 export default function AppRoute() {
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
+
+      {/* LOGIN */}
+      <Route path="/login" element={<Login />} />
+
+      {/* PROTECTED */}
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <Layout />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<ProductsPage />} />
         <Route path="products" element={<ProductsPage />} />
         <Route path="containers" element={<ContainersPage />} />
@@ -21,11 +36,21 @@ export default function AppRoute() {
         <Route path="products/edit/:id" element={<EditProductPage />} />
         <Route path="products/:id/containers" element={<ProductContainersPage />} />
         <Route path="containers/new" element={<CreateContainerPage />} />
-        <Route path="users" element={<UsersPage />} />
+
+        {/* Тільки Admin */}
+        <Route
+          path="users"
+          element={
+            <ProtectedRoute roles={["Admin"]}>
+              <UsersPage />
+            </ProtectedRoute>
+          }
+        />
 
         <Route path="containerdetails" element={<ContainerDetailsPage />} />
         <Route path="containerhistory" element={<ContainerHistoryPage />} />
       </Route>
+
     </Routes>
   );
 }
