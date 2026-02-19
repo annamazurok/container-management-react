@@ -1,17 +1,12 @@
 import "./App.css";
-import ProductsPage from "./pages/ProductsPage/ProductsPage";
-import ContainersPage from "./pages/ContainersPage/ContainersPage";
-import CreateContainerPage from "./pages/CreateContainerPage/CreateContainerPage";
-import CreateProductPage from "./pages/CreateProductPage/CreateProductPage";
-import Layout from "./components/layout/Layout";
+import { BrowserRouter } from "react-router-dom";
+import AppRoute from "./components/AppRoute";
 
 function App() {
   return (
-    <div className="App">
-      <Layout>
-        <CreateContainerPage />
-      </Layout>
-    </div>
+    <BrowserRouter>
+      <AppRoute />
+    </BrowserRouter>
   );
 }
 

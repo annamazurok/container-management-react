@@ -1,6 +1,7 @@
 import "./Layout.css";
+import { Outlet, NavLink, Link } from "react-router-dom";
 
-export default function Layout({ children }) {
+export default function Layout() {
   return (
     <div className="layout">
       <div className="side-panel">
@@ -8,42 +9,54 @@ export default function Layout({ children }) {
           <img className="logo" src="/Logo.svg" alt="Logo" />
         </div>
         <div className="nav-links">
-          <div className="nav-item">
-            <img className="nav-img qr" src="/qr.svg" alt="qr" />
-            <a className="nav-link" href="#">
-              Scan QR
-            </a>
-          </div>
-          <div className="nav-item">
-            <img className="nav-img box" src="/box.svg" alt="box" />
-            <a className="nav-link" href="#">
+
+
+
+          <Link className="nav-link" to="#">
+            <div className="nav-item">
+              <img className="nav-img qr" src="/qr.svg" alt="qr" />
+                Scan QR
+            </div>
+          </Link>
+
+
+
+          <NavLink className="nav-link" to="/containers" end>
+            <div className="nav-item">
+              <img className="nav-img box" src="/box.svg" alt="box" />
               Containers
-            </a>
-          </div>
-          <div className="nav-item">
-            <img
-              className="nav-img shopping-basket"
-              src="/shopping-basket.svg"
-              alt="shopping basket"
-            />
-            <a className="nav-link" href="#">
-              Products
-            </a>
-          </div>
-          <div className="nav-item">
-            <img
-              className="nav-img users-alt"
-              src="/users-alt.svg"
-              alt="users"
-            />
-            <a className="nav-link" href="#">
-              Users
-            </a>
-          </div>
+            </div>
+          </NavLink>
+
+          <NavLink className="nav-link" to="/" end>
+            <div className="nav-item">
+              <img
+                className="nav-img shopping-basket"
+                src="/shopping-basket.svg"
+                alt="shopping basket"
+              />
+                Products
+            </div>
+          </NavLink>
+
+
+          <Link className="nav-link" to="#">
+            <div className="nav-item">
+              <img
+                className="nav-img users-alt"
+                src="/users-alt.svg"
+                alt="users"
+              />
+                Users
+            </div>
+          </Link>
+
+
+
         </div>
       </div>
       <div className="main-content">
-        {children}
+        <Outlet />
       </div>
     </div>
   );
