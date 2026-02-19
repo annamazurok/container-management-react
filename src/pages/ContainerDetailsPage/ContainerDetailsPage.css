@@ -15,6 +15,48 @@
   gap: 18px;
 }
 
+.back-btn {
+  background: transparent;
+  border: none;
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.back-btn:hover {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+.back-btn {
+  background: transparent;
+  border: none;
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.back-btn:hover {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
 .details-card {
   background: #fff;
   border-radius: 20px;

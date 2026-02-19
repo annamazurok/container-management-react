@@ -104,10 +104,18 @@
     background: #ffffff;
     border-top: 1px solid #f0f0f0;
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-start;
     align-items: center;
     padding: 8px 12px;
+    gap: 4px;
     z-index: 100;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .bottom-nav::-webkit-scrollbar {
+    height: 0;
   }
 
   .bottom-link {
@@ -116,6 +124,7 @@
   }
 
   .bottom-item {
+    min-width: 70px;
     width: 70px;
     display: flex;
     flex-direction: column;
@@ -124,6 +133,7 @@
     font-size: 11px;
     padding: 8px;
     border-radius: 14px;
+    flex-shrink: 0;
   }
 
   .bottom-ico {

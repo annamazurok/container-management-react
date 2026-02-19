@@ -9,12 +9,14 @@ export default function Layout() {
           <img className="logo" src="/Logo.svg" alt="Logo" />
         </div>
         <div className="nav-links">
-          <Link className="nav-link" to="#">
+
+
+          <NavLink className="nav-link" to="/containers/new" end>
             <div className="nav-item">
-              <img className="nav-img qr" src="/qr.svg" alt="qr" />
-              Scan QR
+              <img className="nav-img box" src="/box.svg" alt="create container" />
+              Create Container
             </div>
-          </Link>
+          </NavLink>
 
           <NavLink className="nav-link" to="/containers" end>
             <div className="nav-item">
@@ -23,7 +25,7 @@ export default function Layout() {
             </div>
           </NavLink>
 
-          <NavLink className="nav-link" to="/" end>
+          <NavLink className="nav-link" to="/products" end>
             <div className="nav-item">
               <img
                 className="nav-img shopping-basket"
@@ -34,28 +36,46 @@ export default function Layout() {
             </div>
           </NavLink>
 
-          <Link className="nav-link" to="#">
+          <NavLink className="nav-link" to="/products/new" end>
             <div className="nav-item">
               <img
-                className="nav-img users-alt"
-                src="/users-alt.svg"
-                alt="users"
+                className="nav-img shopping-basket"
+                src="/shopping-basket.svg"
+                alt="create product"
               />
-              Users
+              Create Product
             </div>
-          </Link>
+          </NavLink>
+
+          <NavLink className="nav-link" to="/container-types" end>
+            <div className="nav-item">
+              <img className="nav-img box" src="/box.svg" alt="container types" />
+              Container Types
+            </div>
+          </NavLink>
+
+          <NavLink className="nav-link" to="/product-types" end>
+            <div className="nav-item">
+              <img
+                className="nav-img shopping-basket"
+                src="/shopping-basket.svg"
+                alt="product types"
+              />
+              Product Types
+            </div>
+          </NavLink>
+
+          
         </div>
       </div>
+
+      
       <div className="main-content">
         <Outlet />
       </div>
+
+
       <div className="bottom-nav">
-        <NavLink className="bottom-link" to="#" end>
-          <div className="bottom-item">
-            <img className="bottom-ico" src="/qr.svg" alt="qr" />
-            <span>Scan</span>
-          </div>
-        </NavLink>
 
         <NavLink className="bottom-link" to="/containers" end>
           <div className="bottom-item">
@@ -64,7 +84,7 @@ export default function Layout() {
           </div>
         </NavLink>
 
-        <NavLink className="bottom-link" to="/" end>
+        <NavLink className="bottom-link" to="/products" end>
           <div className="bottom-item">
             <img
               className="bottom-ico"
@@ -75,10 +95,35 @@ export default function Layout() {
           </div>
         </NavLink>
 
-        <NavLink className="bottom-link" to="/users" end>
+        <NavLink className="bottom-link" to="/products/new" end>
           <div className="bottom-item">
-            <img className="bottom-ico" src="/users-alt.svg" alt="users" />
-            <span>Users</span>
+            <img
+              className="bottom-ico"
+              src="/shopping-basket.svg"
+              alt="create product"
+            />
+            <span>+ Product</span>
+          </div>
+        </NavLink>
+
+        <NavLink className="bottom-link" to="/containers/new" end>
+          <div className="bottom-item">
+            <img className="bottom-ico" src="/box.svg" alt="create container" />
+            <span>+ Container</span>
+          </div>
+        </NavLink>
+
+        <NavLink className="bottom-link" to="/container-types" end>
+          <div className="bottom-item">
+            <img className="bottom-ico" src="/box.svg" alt="container types" />
+            <span>C. Types</span>
+          </div>
+        </NavLink>
+
+        <NavLink className="bottom-link" to="/product-types" end>
+          <div className="bottom-item">
+            <img className="bottom-ico" src="/shopping-basket.svg" alt="product types" />
+            <span>P. Types</span>
           </div>
         </NavLink>
       </div>

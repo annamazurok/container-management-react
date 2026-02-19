@@ -64,7 +64,7 @@
 .table-head,
 .table-row {
   display: grid;
-  grid-template-columns: 110px 90px 160px 90px 90px 170px 110px 90px;
+  grid-template-columns: 110px 90px 160px 90px 90px 170px 140px;
   align-items: center;
   gap: 6px;
   padding: 12px 8px;
@@ -94,9 +94,7 @@
 }
 
 .col {
-  overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .col.code {
@@ -379,10 +377,18 @@
     background: #ffffff;
     border-top: 1px solid #f0f0f0;
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-start;
     align-items: center;
     padding: 8px 12px;
+    gap: 4px;
     z-index: 50;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .bottom-nav::-webkit-scrollbar {
+    height: 0;
   }
 
   .bottom-link {
@@ -391,6 +397,7 @@
   }
 
   .bottom-item {
+    min-width: 74px;
     width: 74px;
     display: flex;
     flex-direction: column;
@@ -400,6 +407,7 @@
     color: #111;
     padding: 8px 8px;
     border-radius: 14px;
+    flex-shrink: 0;
   }
 
   .bottom-ico {
@@ -415,4 +423,5 @@
   .bottom-link.active .bottom-ico {
     filter: brightness(0);
   }
+
 }

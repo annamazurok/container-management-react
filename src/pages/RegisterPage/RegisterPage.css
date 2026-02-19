@@ -1,0 +1,109 @@
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom right, #10b981, #2563eb);
+}
+
+.register-card {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  max-width: 28rem;
+  width: 100%;
+}
+
+.register-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.register-icon {
+  font-size: 3.75rem;
+  margin-bottom: 1rem;
+}
+
+.register-title {
+  font-size: 1.875rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.register-subtitle {
+  color: #4b5563;
+}
+
+.register-button-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.register-loading {
+  text-align: center;
+  color: #4b5563;
+  margin-bottom: 1rem;
+}
+
+.register-error {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: #fee2e2;
+  border: 1px solid #f87171;
+  color: #991b1b;
+  border-radius: 0.25rem;
+}
+
+.register-error-title {
+  font-weight: 600;
+}
+
+.register-success-container {
+  text-align: center;
+}
+
+.register-success {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: #d1fae5;
+  border: 1px solid #34d399;
+  color: #065f46;
+  border-radius: 0.25rem;
+}
+
+.register-success-title {
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+.register-success p {
+  margin: 0;
+}
+
+.register-success .redirect-message {
+  margin-top: 0.5rem;
+}
+
+.register-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.register-footer p {
+  margin: 0;
+}
+
+.register-link {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.register-link:hover {
+  color: #1e40af;
+}

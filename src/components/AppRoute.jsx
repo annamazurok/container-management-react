@@ -9,46 +9,33 @@ import CreateContainerPage from "../pages/CreateContainerPage/CreateContainerPag
 import UsersPage from "../pages/UsersPage/UsersPage";
 import ContainerDetailsPage from "../pages/ContainerDetailsPage/ContainerDetailsPage";
 import ContainerHistoryPage from "../pages/ContainerHistoryPage/ContainerHistoryPage";
-import Login from "../pages/Login";
-import ProtectedRoute from "./ProtectedRoute";
+import ContainerTypesPage from "../pages/TypesPage/ContainerTypesPage";
+import ProductTypesPage from "../pages/TypesPage/ProductTypesPage";
+import LoginPage from "../pages/LoginPage/LoginPage";
+import RegisterPage from "../pages/RegisterPage/RegisterPage";
 
 
 export default function AppRoute() {
   return (
     <Routes>
 
-      {/* LOGIN */}
-      <Route path="/login" element={<Login />} />
+      <Route path="/login" element={<LoginPage />} />
+      
+      <Route path="/register" element={<RegisterPage />} />
 
-      {/* PROTECTED */}
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <Layout />
-          </ProtectedRoute>
-        }
-      >
-        <Route index element={<ProductsPage />} />
+      <Route path="/" element={<Layout />}>
+        <Route index element={<ContainersPage />} />
         <Route path="products" element={<ProductsPage />} />
         <Route path="containers" element={<ContainersPage />} />
         <Route path="products/new" element={<CreateProductPage />} />
         <Route path="products/edit/:id" element={<EditProductPage />} />
         <Route path="products/:id/containers" element={<ProductContainersPage />} />
         <Route path="containers/new" element={<CreateContainerPage />} />
-
-        {/* Тільки Admin */}
-        <Route
-          path="users"
-          element={
-            <ProtectedRoute roles={["Admin"]}>
-              <UsersPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route path="containerdetails" element={<ContainerDetailsPage />} />
-        <Route path="containerhistory" element={<ContainerHistoryPage />} />
+        <Route path="users" element={<UsersPage />} />
+        <Route path="container-types" element={<ContainerTypesPage />} />
+        <Route path="product-types" element={<ProductTypesPage />} />
+        <Route path="containerdetails/:id" element={<ContainerDetailsPage />} />
+        <Route path="containerhistory/:id" element={<ContainerHistoryPage />} />
       </Route>
 
     </Routes>

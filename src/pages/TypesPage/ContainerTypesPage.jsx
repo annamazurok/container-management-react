@@ -1,9 +1,22 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import "./ContainerTypesPage.css";
+import { useContainerTypes } from "../../hooks/useContainerTypes";
+import {
+  createContainerType,
+  updateContainerType,
+  deleteContainerType,
+} from "../../services/api/containerTypes";
 
 export default function ContainerTypesPage() {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
   const [page, setPage] = useState(1);
+  const [name, setName] = useState("");
+  const [error, setError] = useState("");
+  const [selected, setSelected] = useState(null);
+  const [editingId, setEditingId] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  const { containerTypes, loading, error: fetchError, refetch } = useContainerTypes();
 
   useEffect(() => {
     function onResize() {
@@ -23,28 +36,11 @@ export default function ContainerTypesPage() {
 
   const pageSize = isMobile ? 4 : 6;
 
-  const initial = useMemo(
-    () => [
-      { id: 1, name: "Barrel" },
-      { id: 2, name: "Container" },
-      { id: 3, name: "Barrel" },
-      { id: 4, name: "Box" },
-    ],
-    [],
-  );
-
-  const [items, setItems] = useState(initial);
-  const [name, setName] = useState("");
-  const [error, setError] = useState("");
-  const [selected, setSelected] = useState(null);
-
-  const [editingId, setEditingId] = useState(null);
-
-  const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
+  const totalPages = Math.max(1, Math.ceil(containerTypes.length / pageSize));
   const safePage = Math.min(Math.max(page, 1), totalPages);
 
   const start = (safePage - 1) * pageSize;
-  const paged = items.slice(start, start + pageSize);
+  const paged = containerTypes.slice(start, start + pageSize);
 
   function buildPages(current, total) {
     const result = [];
@@ -75,15 +71,15 @@ export default function ContainerTypesPage() {
   }
 
   function handleEditStart(id) {
-    const item = items.find((x) => x.id === id);
+    const item = containerTypes.find((x) => x.id === id);
     if (!item) return;
 
-    setName(item.name);
+    setName(item.name || item.Name);
     setEditingId(id);
     setError("");
   }
 
-  function handleAdd() {
+  async function handleAdd() {
     const value = name.trim();
 
     if (!value) {
@@ -91,8 +87,10 @@ export default function ContainerTypesPage() {
       return;
     }
 
-    const exists = items.some(
-      (x) => x.name.toLowerCase() === value.toLowerCase() && x.id !== editingId,
+    const exists = containerTypes.some(
+      (x) =>
+        (x.name || x.Name).toLowerCase() === value.toLowerCase() &&
+        x.id !== editingId,
     );
 
     if (exists) {
@@ -100,35 +98,85 @@ export default function ContainerTypesPage() {
       return;
     }
 
-    if (editingId) {
-      setItems((prev) =>
-        prev.map((x) => (x.id === editingId ? { ...x, name: value } : x)),
-      );
-    } else {
-      setItems((prev) => [{ id: Date.now(), name: value }, ...prev]);
-    }
-
-    setName("");
+    setSubmitting(true);
     setError("");
-    setEditingId(null);
-    setSelected(null);
-    setPage(1);
+
+    try {
+      if (editingId) {
+        // Update existing type
+        await updateContainerType({
+          id: editingId,
+          name: value,
+          volume: 0, // You may want to add volume field to the form
+          unitId: 1, // You may want to add unit selection to the form
+          productTypeIds: [],
+        });
+      } else {
+        // Create new type
+        await createContainerType({
+          name: value,
+          volume: 0, // You may want to add volume field to the form
+          unitId: 1, // You may want to add unit selection to the form
+          productTypeIds: [],
+        });
+      }
+
+      await refetch();
+      setName("");
+      setEditingId(null);
+      setSelected(null);
+      setPage(1);
+    } catch (err) {
+      setError(err.message || "Failed to save container type");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
-  function handleDelete(id) {
+  async function handleDelete(id) {
     const ok = confirm("Delete this container type?");
     if (!ok) return;
 
-    setItems((prev) => prev.filter((x) => x.id !== id));
-    if (selected === id) setSelected(null);
-    if (editingId === id) {
-      setEditingId(null);
-      setName("");
-      setError("");
-    }
+    try {
+      await deleteContainerType(id);
+      await refetch();
 
-    const nextTotal = Math.max(1, Math.ceil((items.length - 1) / pageSize));
-    if (page > nextTotal) setPage(nextTotal);
+      if (selected === id) setSelected(null);
+      if (editingId === id) {
+        setEditingId(null);
+        setName("");
+        setError("");
+      }
+
+      const nextTotal = Math.max(1, Math.ceil((containerTypes.length - 1) / pageSize));
+      if (page > nextTotal) setPage(nextTotal);
+    } catch (err) {
+      alert("Failed to delete container type: " + err.message);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="types-page">
+        <div className="types-wrapper">
+          <div className="types-card">
+            <div className="loading-message">Loading container types...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (fetchError) {
+    return (
+      <div className="types-page">
+        <div className="types-wrapper">
+          <div className="types-card">
+            <div className="error-message">Error: {fetchError}</div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -154,7 +202,7 @@ export default function ContainerTypesPage() {
                   }
                   onClick={() => setSelected(x.id)}
                 >
-                  <div className="col name-value">{x.name}</div>
+                  <div className="col name-value">{x.name || x.Name}</div>
 
                   <div className="col actions">
                     <button
@@ -243,13 +291,34 @@ export default function ContainerTypesPage() {
                 setError("");
               }}
               placeholder="Example: Barrel"
+              disabled={submitting}
             />
 
             {error && <div className="field-error">{error}</div>}
 
-            <button className="primary-btn" type="button" onClick={handleAdd}>
-              {editingId ? "Save" : "Add"}
+            <button
+              className="primary-btn"
+              type="button"
+              onClick={handleAdd}
+              disabled={submitting}
+            >
+              {submitting ? "Saving..." : editingId ? "Save" : "Add"}
             </button>
+
+            {editingId && (
+              <button
+                className="secondary-btn"
+                type="button"
+                onClick={() => {
+                  setEditingId(null);
+                  setName("");
+                  setError("");
+                }}
+                disabled={submitting}
+              >
+                Cancel
+              </button>
+            )}
           </div>
         </div>
       </div>

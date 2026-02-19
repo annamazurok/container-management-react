@@ -1,9 +1,22 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import "./ProductTypesPage.css";
+import { useProductTypes } from "../../hooks/useProductTypes";
+import {
+  createProductType,
+  updateProductType,
+  deleteProductType,
+} from "../../services/api/productTypes";
 
 export default function ProductTypesPage() {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
   const [page, setPage] = useState(1);
+  const [title, setTitle] = useState("");
+  const [error, setError] = useState("");
+  const [selected, setSelected] = useState(null);
+  const [editingId, setEditingId] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  const { productTypes, loading, error: fetchError, refetch } = useProductTypes();
 
   useEffect(() => {
     function onResize() {
@@ -23,28 +36,11 @@ export default function ProductTypesPage() {
 
   const pageSize = isMobile ? 4 : 6;
 
-  const initial = useMemo(
-    () => [
-      { id: 1, name: "Liquid" },
-      { id: 2, name: "Liquid" },
-      { id: 3, name: "Liquid" },
-      { id: 4, name: "Liquid" },
-    ],
-    [],
-  );
-
-  const [items, setItems] = useState(initial);
-  const [name, setName] = useState("");
-  const [error, setError] = useState("");
-  const [selected, setSelected] = useState(null);
-
-  const [editingId, setEditingId] = useState(null);
-
-  const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
+  const totalPages = Math.max(1, Math.ceil(productTypes.length / pageSize));
   const safePage = Math.min(Math.max(page, 1), totalPages);
 
   const start = (safePage - 1) * pageSize;
-  const paged = items.slice(start, start + pageSize);
+  const paged = productTypes.slice(start, start + pageSize);
 
   function buildPages(current, total) {
     const result = [];
@@ -75,24 +71,26 @@ export default function ProductTypesPage() {
   }
 
   function handleEditStart(id) {
-    const item = items.find((x) => x.id === id);
+    const item = productTypes.find((x) => x.id === id);
     if (!item) return;
 
-    setName(item.name);
+    setTitle(item.title || item.Title);
     setEditingId(id);
     setError("");
   }
 
-  function handleAdd() {
-    const value = name.trim();
+  async function handleAdd() {
+    const value = title.trim();
 
     if (!value) {
       setError("Enter type name.");
       return;
     }
 
-    const exists = items.some(
-      (x) => x.name.toLowerCase() === value.toLowerCase() && x.id !== editingId,
+    const exists = productTypes.some(
+      (x) =>
+        (x.title || x.Title).toLowerCase() === value.toLowerCase() &&
+        x.id !== editingId,
     );
 
     if (exists) {
@@ -100,35 +98,79 @@ export default function ProductTypesPage() {
       return;
     }
 
-    if (editingId) {
-      setItems((prev) =>
-        prev.map((x) => (x.id === editingId ? { ...x, name: value } : x)),
-      );
-    } else {
-      setItems((prev) => [{ id: Date.now(), name: value }, ...prev]);
-    }
-
-    setName("");
+    setSubmitting(true);
     setError("");
-    setEditingId(null);
-    setSelected(null);
-    setPage(1);
+
+    try {
+      if (editingId) {
+        // Update existing type
+        await updateProductType({
+          id: editingId,
+          title: value,
+        });
+      } else {
+        // Create new type
+        await createProductType({
+          title: value,
+        });
+      }
+
+      await refetch();
+      setTitle("");
+      setEditingId(null);
+      setSelected(null);
+      setPage(1);
+    } catch (err) {
+      setError(err.message || "Failed to save product type");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
-  function handleDelete(id) {
-    const ok = confirm("Delete product type?");
+  async function handleDelete(id) {
+    const ok = confirm("Delete this product type?");
     if (!ok) return;
 
-    setItems((prev) => prev.filter((x) => x.id !== id));
-    if (selected === id) setSelected(null);
-    if (editingId === id) {
-      setEditingId(null);
-      setName("");
-      setError("");
-    }
+    try {
+      await deleteProductType(id);
+      await refetch();
 
-    const nextTotal = Math.max(1, Math.ceil((items.length - 1) / pageSize));
-    if (page > nextTotal) setPage(nextTotal);
+      if (selected === id) setSelected(null);
+      if (editingId === id) {
+        setEditingId(null);
+        setTitle("");
+        setError("");
+      }
+
+      const nextTotal = Math.max(1, Math.ceil((productTypes.length - 1) / pageSize));
+      if (page > nextTotal) setPage(nextTotal);
+    } catch (err) {
+      alert("Failed to delete product type: " + err.message);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="types-page">
+        <div className="types-wrapper">
+          <div className="types-card">
+            <div className="loading-message">Loading product types...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (fetchError) {
+    return (
+      <div className="types-page">
+        <div className="types-wrapper">
+          <div className="types-card">
+            <div className="error-message">Error: {fetchError}</div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -154,7 +196,7 @@ export default function ProductTypesPage() {
                   }
                   onClick={() => setSelected(x.id)}
                 >
-                  <div className="col name-value">{x.name}</div>
+                  <div className="col name-value">{x.title || x.Title}</div>
 
                   <div className="col actions">
                     <button
@@ -230,24 +272,47 @@ export default function ProductTypesPage() {
           </div>
 
           <div className="types-card form-card">
-            <div className="card-head"></div>
+            <div className="card-head">
+              {editingId ? "Edit product type" : "Add new product type"}
+            </div>
 
             <label className="field-label">Type name</label>
             <input
               className={"field-input " + (error ? "error" : "")}
-              value={name}
+              value={title}
               onChange={(e) => {
-                setName(e.target.value);
+                setTitle(e.target.value);
                 setError("");
               }}
               placeholder="Example: Liquid"
+              disabled={submitting}
             />
 
             {error && <div className="field-error">{error}</div>}
 
-            <button className="primary-btn" type="button" onClick={handleAdd}>
-              {editingId ? "Save" : "Add"}
+            <button
+              className="primary-btn"
+              type="button"
+              onClick={handleAdd}
+              disabled={submitting}
+            >
+              {submitting ? "Saving..." : editingId ? "Save" : "Add"}
             </button>
+
+            {editingId && (
+              <button
+                className="secondary-btn"
+                type="button"
+                onClick={() => {
+                  setEditingId(null);
+                  setTitle("");
+                  setError("");
+                }}
+                disabled={submitting}
+              >
+                Cancel
+              </button>
+            )}
           </div>
         </div>
       </div>

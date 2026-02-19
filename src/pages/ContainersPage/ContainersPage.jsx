@@ -3,12 +3,12 @@ import "./ContainersPage.css";
 import { useContainers } from "../../hooks/useContainers";
 import { useContainerTypes } from "../../hooks/useContainerTypes";
 import { useProducts } from "../../hooks/useProducts";
-import { useProductTypes } from "../../hooks/useProductTypes";
 import { useUnits } from "../../hooks/useUnits";
 import { deleteContainer } from "../../services/api/containers";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export default function ContainersPage() {
+  const navigate = useNavigate();
   const [selected, setSelected] = useState(null);
   const [sortBy, setSortBy] = useState("");
   const [deleting, setDeleting] = useState(false);
@@ -24,11 +24,10 @@ export default function ContainersPage() {
   } = useContainers();
   const { containerTypes, loading: typesLoading } = useContainerTypes();
   const { products, loading: productsLoading } = useProducts();
-  const { productTypes, loading: productTypesLoading } = useProductTypes();
   const { units, loading: unitsLoading } = useUnits();
 
   const containers = useMemo(() => {
-    if (typesLoading || productsLoading || productTypesLoading || unitsLoading)
+    if (typesLoading || productsLoading || unitsLoading)
       return [];
 
     return apiContainers.map((container) => {
@@ -59,11 +58,9 @@ export default function ContainersPage() {
     apiContainers,
     containerTypes,
     products,
-    productTypes,
     units,
     typesLoading,
     productsLoading,
-    productTypesLoading,
     unitsLoading,
   ]);
 
@@ -141,6 +138,14 @@ export default function ContainersPage() {
     }
   }
 
+  function handleDetails(id) {
+    navigate(`/containerdetails/${id}`);
+  }
+
+  function handleViewHistory(id) {
+    navigate(`/containerhistory/${id}`);
+  }
+
   async function handleDelete(id) {
     if (deleting) return;
 
@@ -169,7 +174,6 @@ export default function ContainersPage() {
     loading ||
     typesLoading ||
     productsLoading ||
-    productTypesLoading ||
     unitsLoading
   ) {
     return (
@@ -247,8 +251,28 @@ export default function ContainersPage() {
               <div className="col">{item.product}</div>
 
               <div className="col actions">
-                <button className="icon-btn" type="button" title="Edit">
-                  <img src="/edit.svg" alt="edit" />
+                <button
+                  className="icon-btn"
+                  type="button"
+                  title="Details"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDetails(item.id);
+                  }}
+                >
+                  <img src="/edit.svg" alt="details" />
+                </button>
+
+                <button
+                  className="icon-btn"
+                  type="button"
+                  title="View History"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleViewHistory(item.id);
+                  }}
+                >
+                  <img src="/box.svg" alt="history" />
                 </button>
 
                 <button
@@ -300,10 +324,25 @@ export default function ContainersPage() {
                   <button
                     className="icon-btn"
                     type="button"
-                    title="Edit"
-                    onClick={(e) => e.stopPropagation()}
+                    title="Details"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDetails(item.id);
+                    }}
                   >
-                    <img src="/edit.svg" alt="edit" />
+                    <img src="/edit.svg" alt="details" />
+                  </button>
+
+                  <button
+                    className="icon-btn"
+                    type="button"
+                    title="View History"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleViewHistory(item.id);
+                    }}
+                  >
+                    <img src="/box.svg" alt="history" />
                   </button>
 
                   <button
