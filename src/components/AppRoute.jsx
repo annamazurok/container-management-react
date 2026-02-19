@@ -11,17 +11,11 @@ import ContainerDetailsPage from "../pages/ContainerDetailsPage/ContainerDetails
 import ContainerHistoryPage from "../pages/ContainerHistoryPage/ContainerHistoryPage";
 import ContainerTypesPage from "../pages/TypesPage/ContainerTypesPage";
 import ProductTypesPage from "../pages/TypesPage/ProductTypesPage";
-import LoginPage from "../pages/LoginPage/LoginPage";
-import RegisterPage from "../pages/RegisterPage/RegisterPage";
 
 
 export default function AppRoute() {
   return (
     <Routes>
-
-      <Route path="/login" element={<LoginPage />} />
-      
-      <Route path="/register" element={<RegisterPage />} />
 
       <Route path="/" element={<Layout />}>
         <Route index element={<ContainersPage />} />

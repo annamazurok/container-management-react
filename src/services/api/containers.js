@@ -1,51 +1,49 @@
-// src/services/api/containers.js
-
 import { apiFetch } from "../api";
 
 /**
- * Отримати всі контейнери
+ * Get all containers
  */
 export async function getAllContainers() {
   return apiFetch("/containers");
 }
 
 /**
- * Отримати контейнер по ID
+ * Get container by ID
  */
 export async function getContainerById(containerId) {
   return apiFetch(`/containers/${containerId}`);
 }
 
 /**
- * Отримати контейнер по назві
+ * Get container by name
  */
 export async function getContainerByName(name) {
   return apiFetch(`/containers/name/${encodeURIComponent(name)}`);
 }
 
 /**
- * Отримати контейнер по коду
+ * Get container by code
  */
 export async function getContainerByCode(code) {
   return apiFetch(`/containers/code/${encodeURIComponent(code)}`);
 }
 
 /**
- * Отримати контейнери по типу
+ * Get containers by type ID
  */
 export async function getContainersByType(typeId) {
   return apiFetch(`/containers/type/${typeId}`);
 }
 
 /**
- * Отримати контейнери по продукту
+ * Get containers by product ID
  */
 export async function getContainersByProduct(productId) {
   return apiFetch(`/containers/product/${productId}`);
 }
 
 /**
- * Отримати контейнери по статусу
+ * Get containers by status
  * Status values: Default, Active, Inactive, Maintenance, Disposed
  */
 export async function getContainersByStatus(status) {
@@ -53,57 +51,57 @@ export async function getContainersByStatus(status) {
 }
 
 /**
- * Створити новий контейнер
+ * Create a new container
  * @param {Object} data - Container data
- * @param {string} data.name - Container name (lowercase!)
- * @param {number} data.typeId - Container type ID
- * @param {number} [data.productId] - Product ID (optional)
- * @param {number} [data.quantity] - Quantity (optional)
- * @param {number} [data.unitId] - Unit ID (optional)
- * @param {string} [data.notes] - Notes (optional)
+ * @param {string} data.Name - Container name
+ * @param {number} data.TypeId - Container type ID
+ * @param {number} [data.ProductId] - Product ID (optional)
+ * @param {number} [data.Quantity] - Quantity (optional)
+ * @param {number} [data.UnitId] - Unit ID (optional)
+ * @param {string} [data.Notes] - Notes (optional)
  */
 export async function createContainer(data) {
   return apiFetch("/containers", {
     method: "POST",
     body: JSON.stringify({
-      name: data.name,           // lowercase!
-      typeId: data.typeId,       // camelCase!
-      productId: data.productId ?? null,
-      quantity: data.quantity ?? null,
-      unitId: data.unitId ?? null,
-      notes: data.notes,
+      Name: data.Name,
+      TypeId: data.TypeId,
+      ProductId: data.ProductId ?? 0,
+      Quantity: data.Quantity ?? 0,
+      UnitId: data.UnitId ?? 0,
+      Notes: data.Notes,
     }),
   });
 }
 
 /**
- * Оновити існуючий контейнер
+ * Update an existing container
  * @param {Object} data - Container data
- * @param {number} data.id - Container ID
- * @param {string} data.name - Container name
- * @param {number} data.typeId - Container type ID
- * @param {number} [data.productId] - Product ID (optional)
- * @param {number} [data.quantity] - Quantity (optional)
- * @param {number} [data.unitId] - Unit ID (optional)
- * @param {string} [data.notes] - Notes (optional)
+ * @param {number} data.Id - Container ID
+ * @param {string} data.Name - Container name
+ * @param {number} data.TypeId - Container type ID
+ * @param {number} [data.ProductId] - Product ID (optional)
+ * @param {number} [data.Quantity] - Quantity (optional)
+ * @param {number} [data.UnitId] - Unit ID (optional)
+ * @param {string} [data.Notes] - Notes (optional)
  */
 export async function updateContainer(data) {
   return apiFetch("/containers", {
     method: "PUT",
     body: JSON.stringify({
-      id: data.id,               // lowercase!
-      name: data.name,
-      typeId: data.typeId,
-      productId: data.productId,
-      quantity: data.quantity,
-      unitId: data.unitId,
-      notes: data.notes,
+      Id: data.Id,
+      Name: data.Name,
+      TypeId: data.TypeId,
+      ProductId: data.ProductId,
+      Quantity: data.Quantity,
+      UnitId: data.UnitId,
+      Notes: data.Notes,
     }),
   });
 }
 
 /**
- * Видалити контейнер по ID
+ * Delete a container by ID
  */
 export async function deleteContainer(containerId) {
   return apiFetch(`/containers/${containerId}`, {
@@ -111,9 +109,7 @@ export async function deleteContainer(containerId) {
   });
 }
 
-/**
- * Container status enum
- */
+// Export container status enum for convenience
 export const ContainerStatus = {
   Default: "Default",
   Active: "Active",

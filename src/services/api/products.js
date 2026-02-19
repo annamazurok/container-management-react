@@ -20,11 +20,11 @@ export async function createProduct(data) {
   return apiFetch("/products", {
     method: "POST",
     body: JSON.stringify({
-      typeId: data.typeId,
-      name: data.name,
-      produced: data.produced,
-      expirationDate: data.expirationDate,
-      description: data.description,
+      TypeId: data.TypeId,
+      Name: data.Name,
+      Produced: data.Produced,
+      ExpirationDate: data.ExpirationDate,
+      Description: data.Description,
     }),
   });
 }
@@ -33,12 +33,12 @@ export async function updateProduct(data) {
   return apiFetch("/products", {
     method: "PUT",
     body: JSON.stringify({
-      id: data.id,
-      typeId: data.typeId,
-      name: data.name,
-      produced: data.produced,
-      expirationDate: data.expirationDate,
-      description: data.description,
+      Id: data.Id,
+      TypeId: data.TypeId,
+      Name: data.Name,
+      Produced: data.Produced,
+      ExpirationDate: data.ExpirationDate,
+      Description: data.Description,
     }),
   });
 }
