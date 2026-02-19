@@ -1,0 +1,412 @@
+.types-page {
+  min-height: 100vh;
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 26px 18px;
+  font-family: "Urbanist", sans-serif;
+}
+
+.types-wrapper {
+  width: 1100px;
+  max-width: 100%;
+}
+
+.types-title {
+  font-weight: 900;
+  font-size: 34px;
+  color: #111827;
+  text-align: center;
+  margin-bottom: 18px;
+  letter-spacing: 0.2px;
+}
+
+.types-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 0.9fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.types-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0px 4px 52px rgba(0, 0, 0, 0.08);
+  padding: 18px 18px 12px 18px;
+}
+
+.form-card {
+  padding: 18px;
+}
+
+.card-head {
+  font-weight: 800;
+  font-size: 14px;
+  color: #111;
+  margin-bottom: 14px;
+}
+
+.table {
+  border-top: 1px solid #f0f0f0;
+}
+
+.table-head,
+.table-row {
+  display: grid;
+  grid-template-columns: 1fr 84px;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 8px;
+}
+
+.table-head {
+  color: #9a9a9a;
+  font-size: 12px;
+  padding-top: 14px;
+}
+
+.table-row {
+  border-top: 1px solid #f4f4f4;
+  font-size: 12px;
+  color: #111;
+  cursor: pointer;
+  border-radius: 14px;
+}
+
+.table-row:hover {
+  background: #fafafa;
+}
+
+.table-row.selected {
+  background: #f7f7f7;
+}
+
+.col {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.col.name {
+  font-weight: 700;
+}
+
+.name-value {
+  font-weight: 700;
+  color: #111;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  border: none;
+  background: #f3f3f3;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn img {
+  width: 16px;
+  height: 16px;
+  opacity: 0.85;
+}
+
+.icon-btn:hover {
+  background: #dee33e;
+}
+
+.icon-btn:hover img {
+  filter: brightness(0);
+}
+
+.empty-state {
+  padding: 14px 8px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.card-bottom {
+  margin-top: 12px;
+  padding: 8px 6px 6px 6px;
+  display: flex;
+  justify-content: center;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.page-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #9aa0a6;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 4px 6px;
+}
+
+.page-btn.active {
+  width: 30px;
+  height: 30px;
+  border-radius: 11px;
+  background: #111;
+  color: #dee33e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  padding: 0;
+}
+
+.page-arrow {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #c2c6cc;
+  font-size: 20px;
+  padding: 0 4px;
+}
+
+.page-arrow.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.dots {
+  color: #9aa0a6;
+  font-size: 14px;
+}
+
+.field-label {
+  display: block;
+  margin-top: 6px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #111;
+}
+
+.field-input {
+  width: 100%;
+  height: 46px;
+  border: none;
+  background: #f3f3f3;
+  border-radius: 12px;
+  padding: 0 14px;
+  font-size: 12px;
+  color: #111827;
+  outline: none;
+  box-sizing: border-box;
+  font-family: "Urbanist", sans-serif;
+}
+
+.field-input::placeholder {
+  color: #9ca3af;
+}
+
+.field-input.error {
+  outline: 2px solid rgba(239, 68, 68, 0.35);
+}
+
+.field-error {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #ef4444;
+  font-weight: 700;
+}
+
+.primary-btn {
+  margin-top: 14px;
+  width: 170px;
+  height: 38px;
+  border: none;
+  border-radius: 10px;
+  background: #dee33e;
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+  align-self: center;
+  display: block;
+}
+
+.primary-btn:hover {
+  filter: brightness(0.95);
+}
+
+@media (max-width: 900px) {
+  .types-page {
+    align-items: flex-start;
+    padding: 16px 12px 92px 12px;
+  }
+
+  .types-wrapper {
+    width: 100%;
+  }
+
+  .types-title {
+    font-size: 26px;
+    margin-bottom: 12px;
+    letter-spacing: 0.1px;
+  }
+
+  .types-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .types-card {
+    padding: 14px 14px 12px 14px;
+    border-radius: 18px;
+  }
+
+  .card-head {
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+
+  .form-card {
+    order: -1;
+    padding: 14px;
+  }
+
+  .field-label {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+
+  .field-input {
+    height: 48px;
+    border-radius: 14px;
+    font-size: 13px;
+  }
+
+  .primary-btn {
+    width: 100%;
+    height: 44px;
+    border-radius: 14px;
+    font-size: 13px;
+    margin-top: 12px;
+  }
+
+  .table {
+    border-top: none;
+  }
+
+  .table-head {
+    display: none;
+  }
+
+  .table-row {
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    padding: 12px 12px;
+    border: 1px solid #f0f0f0;
+    border-radius: 16px;
+    margin-top: 10px;
+    background: #fff;
+  }
+
+  .table-row:hover {
+    background: #fff;
+  }
+
+  .table-row.selected {
+    border-color: rgba(17, 17, 17, 0.12);
+    box-shadow: 0px 6px 22px rgba(0, 0, 0, 0.06);
+    background: #fff;
+  }
+
+  .name-value {
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.2;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  .actions {
+    gap: 8px;
+  }
+
+  .icon-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 14px;
+  }
+
+  .icon-btn img {
+    width: 16px;
+    height: 16px;
+  }
+
+  .card-bottom {
+    margin-top: 10px;
+    padding: 10px 6px 4px 6px;
+  }
+
+  .pagination {
+    gap: 10px;
+  }
+
+  .page-arrow {
+    font-size: 22px;
+    padding: 0 6px;
+  }
+
+  .page-btn {
+    font-size: 14px;
+    padding: 6px 8px;
+  }
+
+  .page-btn.active {
+    width: 34px;
+    height: 34px;
+    border-radius: 14px;
+  }
+
+  .dots {
+    font-size: 16px;
+  }
+
+  .empty-state {
+    padding: 12px 10px;
+    border: 1px dashed #e8e8e8;
+    border-radius: 14px;
+    margin-top: 10px;
+    background: #fafafa;
+  }
+}
+
+@media (max-width: 420px) {
+  .types-title {
+    font-size: 24px;
+  }
+
+  .types-card {
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .table-row {
+    padding: 11px 11px;
+  }
+
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+  }
+}

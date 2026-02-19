@@ -1,0 +1,281 @@
+.container-details-page {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 26px 18px;
+  font-family: "Urbanist", sans-serif;
+}
+
+.container-details-wrapper {
+  width: 980px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.back-btn {
+  background: transparent;
+  border: none;
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.back-btn:hover {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+.back-btn {
+  background: transparent;
+  border: none;
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.back-btn:hover {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+.details-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0px 4px 52px rgba(0, 0, 0, 0.08);
+  padding: 20px 22px;
+}
+
+.details-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+}
+
+.details-left {
+  flex: 1;
+}
+
+.details-title-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.details-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  color: #111;
+}
+
+.details-status {
+  background: #dee33e;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #111;
+  letter-spacing: 0.4px;
+}
+
+.details-info {
+  font-size: 14px;
+  color: #2b2b2b;
+  line-height: 1.75;
+}
+
+.details-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-box {
+  background: #dee33e;
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-box img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.details-actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: center;
+}
+
+.history-btn {
+  background: #dee33e;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.history-btn:hover {
+  filter: brightness(0.95);
+}
+
+.content-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.content-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  color: #111;
+}
+
+.content-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111;
+}
+
+.content-label img {
+  width: 22px;
+  height: 22px;
+  opacity: 0.9;
+}
+
+.content-info {
+  margin-top: 14px;
+  font-size: 14px;
+  color: #2b2b2b;
+  line-height: 1.75;
+}
+
+@media (max-width: 900px) {
+  .container-details-page {
+    padding: 18px 12px;
+    align-items: flex-start;
+  }
+
+  .container-details-wrapper {
+    width: 100%;
+    gap: 14px;
+  }
+
+  .details-card {
+    padding: 16px 16px;
+    border-radius: 18px;
+  }
+
+  .details-top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .details-title-row {
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+
+  .details-title {
+    font-size: 20px;
+  }
+
+  .details-status {
+    padding: 6px 10px;
+    border-radius: 10px;
+    font-size: 10px;
+  }
+
+  .details-info {
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .details-right {
+    justify-content: center;
+  }
+
+  .qr-box {
+    width: 100%;
+    border-radius: 16px;
+    padding: 12px;
+  }
+
+  .qr-box img {
+    width: 110px;
+    height: 110px;
+    border-radius: 10px;
+  }
+
+  .details-actions {
+    margin-top: 12px;
+  }
+
+  .history-btn {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-size: 12px;
+  }
+
+  .content-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .content-title {
+    font-size: 20px;
+  }
+
+  .content-label {
+    font-size: 13px;
+    gap: 8px;
+  }
+
+  .content-label img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .content-info {
+    margin-top: 10px;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+}

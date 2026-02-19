@@ -1,0 +1,182 @@
+.product-containers-page {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.pcp-page-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0px 4px 52px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.pcp-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.pcp-header-content {
+  flex: 1;
+}
+
+.pcp-page-title {
+  margin: 0 0 8px 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.pcp-container-count {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.pcp-back-btn {
+  background: #dee33e;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #111827;
+  transition: all 0.2s;
+}
+
+.pcp-back-btn:hover {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+}
+
+.pcp-table {
+  border-top: 1px solid #f0f0f0;
+}
+
+.pcp-table-head,
+.pcp-table-row {
+  display: grid;
+  grid-template-columns: 120px 120px 1fr 120px 120px;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 8px;
+}
+
+.pcp-table-head {
+  color: #9a9a9a;
+  font-size: 12px;
+  padding-top: 16px;
+  font-weight: 600;
+}
+
+.pcp-table-row {
+  border-top: 1px solid #f4f4f4;
+  font-size: 13px;
+  color: #111;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.pcp-table-row:hover {
+  background: #fafafa;
+  border-radius: 14px;
+}
+
+.pcp-table-row.pcp-selected {
+  background: #f7f7f7;
+  border-radius: 14px;
+}
+
+.pcp-col {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pcp-col.pcp-code {
+  font-weight: 600;
+  color: #374151;
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+}
+
+.pcp-col.pcp-name {
+  font-weight: 500;
+}
+
+.pcp-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.pcp-badge.filled {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.pcp-badge.empty {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.pcp-badge.maintenance {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.pcp-badge.disposed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.pcp-empty-state {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.pcp-empty-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.pcp-empty-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.pcp-empty-text {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.pcp-loading-message,
+.pcp-error-message {
+  padding: 40px;
+  text-align: center;
+  font-size: 16px;
+  color: #6b7280;
+}
+
+.pcp-error-message {
+  color: #dc2626;
+}

@@ -1,11 +1,12 @@
-import { useState } from "react";
-import "./CreateProductPage.css";
+import { useState, useEffect } from "react";
+import "./EditProductPage.css";
 import { useProductTypes } from "../../hooks/useProductTypes";
-import { createProduct } from "../../services/api/products";
-import { useNavigate } from "react-router-dom";
+import { getProductById, updateProduct } from "../../services/api/products";
+import { useNavigate, useParams } from "react-router-dom";
 
-export default function CreateProductPage() {
+export default function EditProductPage() {
   const navigate = useNavigate();
+  const { id } = useParams();
   const { productTypes, loading: typesLoading } = useProductTypes();
   
   const [form, setForm] = useState({
@@ -16,22 +17,44 @@ export default function CreateProductPage() {
     expirationDate: "",
   });
 
+  const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function loadProduct() {
+      try {
+        setLoading(true);
+        const product = await getProductById(id);
+        
+        setForm({
+          typeId: product.typeId?.toString() || "",
+          name: product.name || product.Name || "",
+          description: product.description || product.Description || "",
+          productionDate: product.produced 
+            ? new Date(product.produced).toISOString().split('T')[0]
+            : "",
+          expirationDate: product.expirationDate 
+            ? new Date(product.expirationDate).toISOString().split('T')[0]
+            : "",
+        });
+      } catch (err) {
+        setError(err.message);
+        alert("Failed to load product: " + err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadProduct();
+  }, [id]);
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
   function handleCancel() {
-    setForm({
-      typeId: "",
-      name: "",
-      description: "",
-      productionDate: "",
-      expirationDate: "",
-    });
-    setError(null);
+    navigate("/products");
   }
 
   async function handleSubmit(e) {
@@ -45,7 +68,8 @@ export default function CreateProductPage() {
     setSubmitting(true);
 
     try {
-      await createProduct({
+      await updateProduct({
+        Id: parseInt(id),
         TypeId: parseInt(form.typeId),
         Name: form.name,
         Produced: new Date(form.productionDate).toISOString(),
@@ -55,35 +79,46 @@ export default function CreateProductPage() {
         Description: form.description || null,
       });
 
-      alert("Product created successfully!");
+      alert("Product updated successfully!");
       navigate("/products");
     } catch (err) {
       setError(err.message);
-      alert("Failed to create product: " + err.message);
+      alert("Failed to update product: " + err.message);
     } finally {
       setSubmitting(false);
     }
   }
 
+  if (loading || typesLoading) {
+    return (
+      <div className="edit-product-page">
+        <div className="edit-card">
+          <div className="loading-text">Loading product...</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="create-product-page">
-      <div className="create-card">
-        <h1 className="create-title">Create product</h1>
+    <div className="edit-product-page">
+      <div className="edit-card">
+        <h1 className="edit-title">Edit product</h1>
 
         {error && <div className="error-banner">{error}</div>}
 
-        <form className="create-form" onSubmit={handleSubmit}>
-              <input
-        className="create-input"
-        name="name"
-        type="text"
-        placeholder="Product name"
-        value={form.name}
-        onChange={handleChange}
-        required
-      />
+        <form className="edit-form" onSubmit={handleSubmit}>
+          <input
+            className="edit-input"
+            name="name"
+            type="text"
+            placeholder="Product name"
+            value={form.name}
+            onChange={handleChange}
+            required
+          />
+          
           <select
-            className="create-input create-select"
+            className="edit-input edit-select"
             name="typeId"
             value={form.typeId}
             onChange={handleChange}
@@ -100,7 +135,7 @@ export default function CreateProductPage() {
           </select>
 
           <textarea
-            className="create-input create-textarea"
+            className="edit-input edit-textarea"
             name="description"
             placeholder="Description (optional)"
             value={form.description}
@@ -109,7 +144,7 @@ export default function CreateProductPage() {
           />
 
           <input
-            className="create-input"
+            className="edit-input"
             name="productionDate"
             type="date"
             placeholder="Production date"
@@ -118,7 +153,7 @@ export default function CreateProductPage() {
           />
 
           <input
-            className="create-input"
+            className="edit-input"
             name="expirationDate"
             type="date"
             placeholder="Expiration date (optional)"
@@ -137,11 +172,11 @@ export default function CreateProductPage() {
             </button>
             
             <button 
-              className="create-btn" 
+              className="edit-btn" 
               type="submit"
               disabled={submitting || typesLoading}
             >
-              {submitting ? "Creating..." : "Create"}
+              {submitting ? "Updating..." : "Update"}
             </button>
           </div>
         </form>
