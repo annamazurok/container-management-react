@@ -26,27 +26,22 @@ export async function getProductTypeByTitle(title) {
  * @param {Object} data - Product type data
  * @param {string} data.Title - Product type title
  */
+// ✅ Виправлення
 export async function createProductType(data) {
   return apiFetch("/product-types", {
     method: "POST",
     body: JSON.stringify({
-      Title: data.Title,
+      Title: data.title ?? data.Title,
     }),
   });
 }
 
-/**
- * Update an existing product type
- * @param {Object} data - Product type data
- * @param {number} data.Id - Product type ID
- * @param {string} data.Title - Product type title
- */
 export async function updateProductType(data) {
   return apiFetch("/product-types", {
     method: "PUT",
     body: JSON.stringify({
-      Id: data.Id,
-      Title: data.Title,
+      Id: data.id ?? data.Id,
+      Title: data.title ?? data.Title,
     }),
   });
 }
