@@ -16,7 +16,12 @@ export default function ProductTypesPage() {
   const [editingId, setEditingId] = useState(null);
   const [submitting, setSubmitting] = useState(false);
 
-  const { productTypes, loading, error: fetchError, refetch } = useProductTypes();
+  const {
+    productTypes,
+    loading,
+    error: fetchError,
+    refetch,
+  } = useProductTypes();
 
   useEffect(() => {
     function onResize() {
@@ -103,13 +108,11 @@ export default function ProductTypesPage() {
 
     try {
       if (editingId) {
-        // Update existing type
         await updateProductType({
           id: editingId,
           title: value,
         });
       } else {
-        // Create new type
         await createProductType({
           title: value,
         });
@@ -142,7 +145,10 @@ export default function ProductTypesPage() {
         setError("");
       }
 
-      const nextTotal = Math.max(1, Math.ceil((productTypes.length - 1) / pageSize));
+      const nextTotal = Math.max(
+        1,
+        Math.ceil((productTypes.length - 1) / pageSize),
+      );
       if (page > nextTotal) setPage(nextTotal);
     } catch (err) {
       alert("Failed to delete product type: " + err.message);
