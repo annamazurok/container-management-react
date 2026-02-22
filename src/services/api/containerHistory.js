@@ -1,50 +1,67 @@
 import { apiFetch } from "../api";
 
 /**
- * Get all container history records
+ * HISTORY API
+ * ✅ Confirmed by Swagger:
+ *   GET /api/History/container/{containerId}
+ *
+ * Other endpoints below follow the same controller prefix: /api/History/...
+ * If any of them returns 404 -> open Swagger and adjust only that path.
+ */
+
+/**
+ * Get all history records
+ * Expected: GET /api/History
  */
 export async function getAllContainerHistory() {
-  return apiFetch("/api/containerhistory");
+  return apiFetch("/api/History");
 }
 
 /**
- * Get container history by ID
+ * Get history record by history ID
+ * Expected: GET /api/History/{id}
  */
 export async function getContainerHistoryById(id) {
-  return apiFetch(`/api/containerhistory/${id}`);
+  return apiFetch(`/api/History/${id}`);
 }
 
 /**
- * Get container history by container ID
+ * ✅ Get history by container ID (CONFIRMED)
+ * Swagger: GET /api/History/container/{containerId}
  */
 export async function getContainerHistoryByContainerId(containerId) {
-  return apiFetch(`/api/containerhistory/container/${containerId}`);
+  return apiFetch(`/api/History/container/${containerId}`);
 }
 
 /**
- * Get container history by product ID
+ * Get history by product ID
+ * Expected: GET /api/History/product/{productId}
  */
 export async function getContainerHistoryByProductId(productId) {
-  return apiFetch(`/api/containerhistory/product/${productId}`);
+  return apiFetch(`/api/History/product/${productId}`);
 }
 
 /**
- * Get container history by action type
+ * Get history by action type
+ * Expected: GET /api/History/action-type/{actionType}
+ * (sometimes it's: /api/History/actionType/{actionType} or /api/History/action/{actionType})
  */
 export async function getContainerHistoryByActionType(actionType) {
-  return apiFetch(`/api/containerhistory/action-type/${actionType}`);
+  return apiFetch(`/api/History/action-type/${actionType}`);
 }
 
 /**
- * Get container history by user ID
+ * Get history by user ID
+ * Expected: GET /api/History/user/{userId}
  */
 export async function getContainerHistoryByUserId(userId) {
-  return apiFetch(`/api/containerhistory/user/${userId}`);
+  return apiFetch(`/api/History/user/${userId}`);
 }
 
 /**
- * Get recent container history records
+ * Get recent history records
+ * Expected: GET /api/History/recent/{count}
  */
 export async function getRecentContainerHistory(count) {
-  return apiFetch(`/api/containerhistory/recent/${count}`);
+  return apiFetch(`/api/History/recent/${count}`);
 }

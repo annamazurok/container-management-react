@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "./ProductsPage.css";
 import { useProducts } from "../../hooks/useProducts";
 import { useProductTypes } from "../../hooks/useProductTypes";
@@ -20,14 +20,14 @@ export default function ProductsPage() {
   const products = useMemo(() => {
     if (typesLoading) return [];
 
-    return apiProducts.map((product) => {
-      const type = productTypes.find((t) => t.id === product.typeId);
+    return (apiProducts || []).map((product) => {
+      const type = (productTypes || []).find((t) => t.id === product.typeId);
 
       return {
         id: product.id,
-        name: product.name || product.Name,
-        type: type?.title || type?.Title || "Unknown",
-        description: product.description || product.Description || "-",
+        name: product.name || product.Name || "—",
+        type: type?.title || type?.Title || "—",
+        description: product.description || product.Description || "—",
         produced: product.produced,
         expirationDate: product.expirationDate,
       };
@@ -39,15 +39,19 @@ export default function ProductsPage() {
     if (!q) return products;
 
     return products.filter((p) => {
-      return (
-        p.name.toLowerCase().includes(q) ||
-        p.type.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q)
-      );
+      const name = (p.name || "").toLowerCase();
+      const type = (p.type || "").toLowerCase();
+      const desc = (p.description || "").toLowerCase();
+
+      return name.includes(q) || type.includes(q) || desc.includes(q);
     });
   }, [products, search]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+
+  useEffect(() => {
+    if (page > totalPages) setPage(totalPages);
+  }, [page, totalPages]);
 
   const pageItems = useMemo(() => {
     const start = (page - 1) * pageSize;
@@ -55,7 +59,7 @@ export default function ProductsPage() {
   }, [filtered, page, pageSize]);
 
   function handleAdd() {
-    alert("Open create product page");
+    navigate("/products/new");
   }
 
   function handleEdit(id) {
@@ -93,8 +97,6 @@ export default function ProductsPage() {
   function goNext() {
     setPage((p) => Math.min(totalPages, p + 1));
   }
-
-  if (page > totalPages) setPage(totalPages);
 
   if (loading || typesLoading) {
     return (
@@ -151,10 +153,11 @@ export default function ProductsPage() {
 
           <div className="table desktop-only">
             <div className="table-head">
-              <div className="col type">Type</div>
-              <div className="col desc">Description</div>
-              <div className="col units">Units</div>
-              <div className="col actions-head">Actions</div>
+              <div className="col col-name">Name</div>
+              <div className="col col-type">Type</div>
+              <div className="col col-desc">Description</div>
+              <div className="col col-view-head">View</div>
+              <div className="col col-actions-head">Actions</div>
             </div>
 
             {pageItems.map((item) => (
@@ -165,12 +168,19 @@ export default function ProductsPage() {
                 }
                 onClick={() => setSelected(item.id)}
               >
-                <div className="col type-value">{item.type}</div>
-                <div className="col desc-value">{item.description}</div>
+                <div className="col col-name value-strong" title={item.name}>
+                  {item.name}
+                </div>
 
-                <div className="col units">
-                  <span className="units-badge">{item.units} units</span>
+                <div className="col col-type" title={item.type}>
+                  <span className="type-pill">{item.type}</span>
+                </div>
 
+                <div className="col col-desc" title={item.description}>
+                  {item.description}
+                </div>
+
+                <div className="col col-view">
                   <button
                     className="view-btn"
                     type="button"
@@ -183,7 +193,7 @@ export default function ProductsPage() {
                   </button>
                 </div>
 
-                <div className="col actions">
+                <div className="col col-actions">
                   <button
                     className="icon-btn"
                     type="button"
@@ -227,8 +237,8 @@ export default function ProductsPage() {
                   onClick={() => setSelected(item.id)}
                 >
                   <div className="product-card-top">
-                    <div className="product-title">{item.type}</div>
-                    <span className="units-pill">{item.units} units</span>
+                    <div className="product-title">{item.name}</div>
+                    <span className="type-pill">{item.type}</span>
                   </div>
 
                   <div className="product-desc">{item.description}</div>

@@ -1,13 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
-import "./CreateContainerPage.css";
+import "./EditContainerPage.css";
 import { useContainerTypes } from "../../hooks/useContainerTypes";
 import { useProducts } from "../../hooks/useProducts";
 import { useUnits } from "../../hooks/useUnits";
-import { createContainer } from "../../services/api/containers";
-import { useNavigate } from "react-router-dom";
+import {
+  getContainerById,
+  updateContainer,
+} from "../../services/api/containers";
+import { useNavigate, useParams } from "react-router-dom";
 
-export default function CreateContainerPage() {
+export default function EditContainerPage() {
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const { containerTypes, loading: typesLoading } = useContainerTypes();
   const { products, loading: productsLoading } = useProducts();
@@ -21,6 +25,7 @@ export default function CreateContainerPage() {
     notes: "",
   });
 
+  const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -30,22 +35,66 @@ export default function CreateContainerPage() {
   }
 
   function handleCancel() {
-    setForm({
-      name: "",
-      typeId: "",
-      productId: "",
-      quantity: "",
-      notes: "",
-    });
-    setError("");
+    navigate("/containers");
   }
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadContainer() {
+      setLoading(true);
+      setError("");
+
+      try {
+        const container = await getContainerById(id);
+
+        if (mounted) {
+          const typeId =
+            container.typeId ??
+            container.TypeId ??
+            container.containerTypeId ??
+            container.ContainerTypeId ??
+            "";
+
+          const productId = container.productId ?? container.ProductId ?? "";
+
+          const qty = container.quantity ?? container.Quantity ?? "";
+
+          const notes = container.notes ?? container.Notes ?? "";
+
+          setForm({
+            name: (container.name ?? container.Name ?? "").toString(),
+            typeId: typeId ? String(typeId) : "",
+            productId: productId ? String(productId) : "",
+            quantity: qty === 0 ? "0" : qty ? String(qty) : "",
+            notes: notes ? String(notes) : "",
+          });
+        }
+      } catch (err) {
+        if (mounted) {
+          setError(err?.message || "Failed to load container.");
+        }
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    if (id) loadContainer();
+
+    return () => {
+      mounted = false;
+    };
+  }, [id]);
 
   const selectedType = useMemo(() => {
     if (!form.typeId) return null;
-    const id = Number(form.typeId);
+    const typeIdNum = Number(form.typeId);
 
     return (
-      (containerTypes || []).find((t) => Number(t.id ?? t.Id) === id) || null
+      (containerTypes || []).find((t) => Number(t.id ?? t.Id) === typeIdNum) ||
+      null
     );
   }, [form.typeId, containerTypes]);
 
@@ -132,14 +181,15 @@ export default function CreateContainerPage() {
     if (!name) return setError("Enter container name.");
     if (!form.typeId) return setError("Select container type.");
 
-    const q = form.quantity ? Number(form.quantity) : 0;
+    const q = form.quantity !== "" ? Number(form.quantity) : 0;
     const cap = typeCapacity ? Number(typeCapacity) : 0;
 
     if (Number.isNaN(q) || q < 0) return setError("Quantity must be >= 0.");
-    if (cap && q > cap)
+    if (cap && q > cap) {
       return setError(
         `Quantity cannot be bigger than capacity (${cap} ${unitTitle}).`,
       );
+    }
 
     setSubmitting(true);
 
@@ -147,36 +197,51 @@ export default function CreateContainerPage() {
       const typeIdNum = Number(form.typeId);
       const productIdNum = form.productId ? Number(form.productId) : 0;
 
-      await createContainer({
+      await updateContainer({
+        Id: Number(id),
         Name: name,
+
         TypeId: typeIdNum,
         ContainerTypeId: typeIdNum,
 
         ProductId: productIdNum,
         Quantity: q,
+
         UnitId: typeUnitId || 0,
         Notes: form.notes?.trim() ? form.notes.trim() : null,
       });
 
+      alert("Container updated successfully!");
       navigate("/containers");
     } catch (err) {
-      setError(err?.message || "Failed to create container.");
+      setError(err?.message || "Failed to update container.");
     } finally {
       setSubmitting(false);
     }
   }
 
+  if (loading || typesLoading || productsLoading || unitsLoading) {
+    return (
+      <div className="edit-container-page">
+        <div className="edit-card">
+          <div className="loading-text">Loading container...</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="create-container-page">
-      <div className="create-card">
-        <h1 className="create-title">Create container</h1>
+    <div className="edit-container-page">
+      <div className="edit-card">
+        <h1 className="edit-title">Edit container</h1>
 
         {error && <div className="error-banner">{error}</div>}
 
-        <form className="create-form" onSubmit={handleSubmit}>
+        <form className="edit-form" onSubmit={handleSubmit}>
           <input
-            className="create-input"
+            className="edit-input"
             name="name"
+            type="text"
             placeholder="Container name"
             value={form.name}
             onChange={handleChange}
@@ -184,7 +249,7 @@ export default function CreateContainerPage() {
           />
 
           <select
-            className="create-input create-select"
+            className="edit-input edit-select"
             name="typeId"
             value={form.typeId}
             onChange={handleChange}
@@ -221,7 +286,7 @@ export default function CreateContainerPage() {
           )}
 
           <select
-            className="create-input create-select"
+            className="edit-input edit-select"
             name="productId"
             value={form.productId}
             onChange={handleChange}
@@ -251,7 +316,7 @@ export default function CreateContainerPage() {
 
           <div className="form-row">
             <input
-              className="create-input"
+              className="edit-input"
               name="quantity"
               type="number"
               placeholder={
@@ -266,7 +331,7 @@ export default function CreateContainerPage() {
             />
 
             <input
-              className="create-input"
+              className="edit-input"
               value={
                 unitsLoading
                   ? "Loading unit..."
@@ -280,7 +345,7 @@ export default function CreateContainerPage() {
           </div>
 
           <textarea
-            className="create-input create-textarea"
+            className="edit-input edit-textarea"
             name="notes"
             placeholder="Notes (optional)"
             value={form.notes}
@@ -299,12 +364,8 @@ export default function CreateContainerPage() {
               Cancel
             </button>
 
-            <button
-              className="create-btn"
-              type="submit"
-              disabled={submitting || typesLoading}
-            >
-              {submitting ? "Creating..." : "Create"}
+            <button className="edit-btn" type="submit" disabled={submitting}>
+              {submitting ? "Updating..." : "Update"}
             </button>
           </div>
         </form>

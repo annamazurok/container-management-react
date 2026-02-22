@@ -27,7 +27,6 @@ export default function ContainerDetailsPage() {
         const containerData = await getContainerById(id);
         setContainer(containerData);
 
-        // Fetch related data
         if (containerData.typeId) {
           const typeData = await getContainerTypeById(containerData.typeId);
           setContainerType(typeData);
@@ -38,7 +37,9 @@ export default function ContainerDetailsPage() {
           setProduct(productData);
 
           if (productData.typeId) {
-            const productTypeData = await getProductTypeById(productData.typeId);
+            const productTypeData = await getProductTypeById(
+              productData.typeId,
+            );
             setProductType(productTypeData);
           }
         }
@@ -109,12 +110,15 @@ export default function ContainerDetailsPage() {
     );
   }
 
-  const volumeDisplay = container.quantity && unit 
-    ? `${container.quantity} ${unit.title || unit.Title}`
-    : "-";
+  const volumeDisplay =
+    container.quantity && unit
+      ? `${container.quantity} ${unit.title || unit.Title}`
+      : "-";
 
-  const productName = product ? (product.name || product.Name) : "-";
-  const productTypeTitle = productType ? (productType.title || productType.Title) : "-";
+  const productName = product ? product.name || product.Name : "-";
+  const productTypeTitle = productType
+    ? productType.title || productType.Title
+    : "-";
 
   return (
     <div className="container-details-page">
@@ -128,15 +132,28 @@ export default function ContainerDetailsPage() {
             <div className="details-left">
               <div className="details-title-row">
                 <h2 className="details-title">{container.code}</h2>
-                <span className="details-status">{container.status || "Default"}</span>
+                <span className="details-status">
+                  {container.status || "Default"}
+                </span>
               </div>
 
               <div className="details-info">
-                <div><strong>Code:</strong> {container.code}</div>
-                <div><strong>Type:</strong> {containerType?.name || containerType?.Name || "Unknown"}</div>
-                <div><strong>Name:</strong> {container.name || container.Name}</div>
-                <div><strong>Volume:</strong> {volumeDisplay}</div>
-                <div><strong>Notes:</strong> {container.notes || "No notes"}</div>
+                <div>
+                  <strong>Code:</strong> {container.code}
+                </div>
+                <div>
+                  <strong>Type:</strong>{" "}
+                  {containerType?.name || containerType?.Name || "Unknown"}
+                </div>
+                <div>
+                  <strong>Name:</strong> {container.name || container.Name}
+                </div>
+                <div>
+                  <strong>Volume:</strong> {volumeDisplay}
+                </div>
+                <div>
+                  <strong>Notes:</strong> {container.notes || "No notes"}
+                </div>
               </div>
             </div>
 
@@ -148,7 +165,11 @@ export default function ContainerDetailsPage() {
           </div>
 
           <div className="details-actions">
-            <button className="history-btn" type="button" onClick={handleViewHistory}>
+            <button
+              className="history-btn"
+              type="button"
+              onClick={handleViewHistory}
+            >
               View history of container contents
             </button>
           </div>
@@ -166,9 +187,19 @@ export default function ContainerDetailsPage() {
             </div>
 
             <div className="content-info">
-              <div><strong>Category:</strong> {productTypeTitle}</div>
-              <div><strong>Produced:</strong> {product.produced ? new Date(product.produced).toLocaleDateString() : "-"}</div>
-              <div><strong>Description:</strong> {product.description || product.Description || "-"}</div>
+              <div>
+                <strong>Category:</strong> {productTypeTitle}
+              </div>
+              <div>
+                <strong>Produced:</strong>{" "}
+                {product.produced
+                  ? new Date(product.produced).toLocaleDateString()
+                  : "-"}
+              </div>
+              <div>
+                <strong>Description:</strong>{" "}
+                {product.description || product.Description || "-"}
+              </div>
             </div>
           </div>
         )}
