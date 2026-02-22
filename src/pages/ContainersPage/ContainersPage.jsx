@@ -161,6 +161,10 @@ export default function ContainersPage() {
     else setSortBy("");
   }
 
+  function handleEdit(id) {
+    navigate(`/containers/edit/${id}`);
+  }
+
   function handleDetails(id) {
     navigate(`/containerdetails/${id}`);
   }
@@ -266,13 +270,22 @@ export default function ContainersPage() {
                 <button
                   className="icon-btn"
                   type="button"
-                  title="Details"
+                  title="Edit"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleDetails(item.id);
+                    handleEdit(item.id);
                   }}
                 >
-                  <img src="/edit.svg" alt="details" />
+                  <img src="/edit.svg" alt="Edit" />
+                </button>
+
+                <button className="icon-btn" type="button" Title="Details" onClick={
+                  (e) => {
+                    e.stopPropagation();
+                    handleDetails(item.id);;
+                  }
+                }> 
+                  <img src="/details.svg" alt="Details" />
                 </button>
 
                 <button
@@ -339,7 +352,7 @@ export default function ContainersPage() {
                     title="Details"
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleDetails(item.id);
+                      handleEdit(item.id);
                     }}
                   >
                     <img src="/edit.svg" alt="details" />

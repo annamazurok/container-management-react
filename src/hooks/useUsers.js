@@ -2,22 +2,16 @@ import { useState, useEffect, useCallback } from "react";
 import {
   getAllUsers,
   createUser,
+  updateUser,
   confirmUser,
-  changeUserRole,
   deleteUser,
 } from "../services/api/users";
 
-/**
- * Hook для роботи з користувачами (тільки для Admin)
- */
 export function useUsers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  /**
-   * Завантажити всіх користувачів
-   */
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -32,9 +26,6 @@ export function useUsers() {
     }
   }, []);
 
-  /**
-   * Створити користувача
-   */
   const handleCreate = async (data) => {
     try {
       const newUser = await createUser(data);
@@ -45,9 +36,18 @@ export function useUsers() {
     }
   };
 
-  /**
-   * Підтвердити користувача
-   */
+  const handleUpdate = async (data) => {
+    try {
+      const updated = await updateUser(data);
+      setUsers((prev) =>
+        prev.map((user) => (user.id === updated.id ? updated : user))
+      );
+      return { success: true, data: updated };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  };
+
   const handleConfirm = async (userId) => {
     try {
       const updated = await confirmUser(userId);
@@ -60,24 +60,6 @@ export function useUsers() {
     }
   };
 
-  /**
-   * Змінити роль користувача
-   */
-  const handleChangeRole = async (userId, roleId) => {
-    try {
-      const updated = await changeUserRole(userId, roleId);
-      setUsers((prev) =>
-        prev.map((user) => (user.id === updated.id ? updated : user))
-      );
-      return { success: true, data: updated };
-    } catch (err) {
-      return { success: false, error: err.message };
-    }
-  };
-
-  /**
-   * Видалити користувача
-   */
   const handleDelete = async (userId) => {
     try {
       await deleteUser(userId);
@@ -98,8 +80,8 @@ export function useUsers() {
     error,
     refetch: fetchUsers,
     createUser: handleCreate,
+    updateUser: handleUpdate,
     confirmUser: handleConfirm,
-    changeUserRole: handleChangeRole,
     deleteUser: handleDelete,
   };
 }

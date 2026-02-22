@@ -65,6 +65,27 @@ export default function Layout() {
             </div>
           </NavLink>
 
+          <NavLink className="nav-link" to="/units" end>
+            <div className="nav-item">
+              <img
+                className="nav-img shopping-basket"
+                src="/shopping-basket.svg"
+                alt="product types"
+              />
+              Units
+            </div>
+          </NavLink>
+
+          <NavLink className="nav-link" to="/users" end>
+            <div className="nav-item">
+              <img
+                className="nav-img shopping-basket"
+                src="/shopping-basket.svg"
+                alt="product types"
+              />
+              Users
+            </div>
+          </NavLink>
           
         </div>
       </div>
@@ -126,6 +147,21 @@ export default function Layout() {
             <span>P. Types</span>
           </div>
         </NavLink>
+
+        <NavLink className="bottom-link" to="/units" end>
+          <div className="bottom-item">
+            <img className="bottom-ico" src="/shopping-basket.svg" alt="product types" />
+            <span>Units</span>
+          </div>
+        </NavLink>
+
+        <NavLink className="bottom-link" to="/users" end>
+          <div className="bottom-item">
+            <img className="bottom-ico" src="/shopping-basket.svg" alt="product types" />
+            <span>Users</span>
+          </div>
+        </NavLink>
+
       </div>
     </div>
   );
