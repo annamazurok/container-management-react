@@ -18,6 +18,23 @@ export default function ContainerDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Convert numeric status enum to string
+  const getStatusName = (status) => {
+    const statusMap = {
+      0: "Default",
+      1: "Active",
+      2: "Inactive",
+      3: "Maintenance",
+      4: "Disposed"
+    };
+    
+    // If it's already a string, return it
+    if (typeof status === "string") return status;
+    
+    // If it's a number, convert it
+    return statusMap[status] ?? "Default";
+  };
+
   useEffect(() => {
     async function fetchContainerDetails() {
       setLoading(true);
@@ -133,7 +150,7 @@ export default function ContainerDetailsPage() {
               <div className="details-title-row">
                 <h2 className="details-title">{container.code}</h2>
                 <span className="details-status">
-                  {container.status || "Default"}
+                  {getStatusName(container.status ?? container.Status ?? 0)}
                 </span>
               </div>
 

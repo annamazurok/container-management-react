@@ -17,6 +17,23 @@ export default function ContainersPage() {
   const [page, setPage] = useState(1);
   const pageSize = 6;
 
+  // Convert numeric status enum to string
+  const getStatusName = (status) => {
+    const statusMap = {
+      0: "Default",
+      1: "Active",
+      2: "Inactive",
+      3: "Maintenance",
+      4: "Disposed"
+    };
+    
+    // If it's already a string, return it
+    if (typeof status === "string") return status;
+    
+    // If it's a number, convert it
+    return statusMap[status] ?? "Default";
+  };
+
   const {
     containers: apiContainers,
     loading,
@@ -55,6 +72,8 @@ export default function ContainersPage() {
 
       const qty = container.quantity ?? container.Quantity;
 
+      const rawStatus = container.status ?? container.Status ?? 0;
+
       return {
         id: containerId,
         code: container.code ?? container.Code ?? "-",
@@ -64,7 +83,7 @@ export default function ContainersPage() {
           qty != null && qty !== "" && unit
             ? `${qty} ${unit.title ?? unit.Title ?? ""}`.trim()
             : "-",
-        state: container.status ?? container.Status ?? "Default",
+        state: getStatusName(rawStatus),
         product: productDisplay,
       };
     });

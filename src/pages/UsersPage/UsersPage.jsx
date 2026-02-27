@@ -151,6 +151,8 @@ export default function UsersPage() {
     const result = await confirmUser(id);
     if (!result.success) {
       alert("Error confirming user: " + result.error);
+    } else {
+      await refetch();
     }
   }
 
@@ -207,36 +209,35 @@ export default function UsersPage() {
   }
 
   function getUserStatus(user) {
-    // Assuming isConfirmed field indicates approval status
-    return user.isConfirmed ? "Approved" : "Pending";
+    return user.confirmed ? "Approved" : "Pending";
   }
 
   if (safePage !== page) setPage(safePage);
 
   if (loading || rolesLoading) {
     return (
-      <div className="users-page">
-        <div className="page-card">Loading...</div>
+      <div className="up-users-page">
+        <div className="up-page-card">Loading...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="users-page">
-        <div className="page-card">Error: {error}</div>
+      <div className="up-users-page">
+        <div className="up-page-card">Error: {error}</div>
       </div>
     );
   }
 
   return (
-    <div className="users-page">
-      <div className="page-card">
-        <div className="users-top">
-          <div className="search-wrap">
+    <div className="up-users-page">
+      <div className="up-page-card">
+        <div className="up-users-top">
+          <div className="up-search-wrap">
             <img src="/Search.svg" alt="search" />
             <input
-              className="search-input"
+              className="up-search-input"
               type="text"
               placeholder="Search users"
               value={search}
@@ -244,56 +245,56 @@ export default function UsersPage() {
             />
           </div>
 
-          <button className="add-users-btn" type="button" onClick={handleAdd}>
+          <button className="up-add-users-btn" type="button" onClick={handleAdd}>
             + Add Users
           </button>
         </div>
 
-        <div className="table desktop-only">
-          <div className="table-head users-grid">
-            <div className="col">No</div>
-            <div className="col">User Name</div>
-            <div className="col">Email</div>
-            <div className="col">Role</div>
-            <div className="col">Status</div>
-            <div className="col actions"></div>
+        <div className="up-table up-desktop-only">
+          <div className="up-table-head up-users-grid">
+            <div className="up-col">No</div>
+            <div className="up-col">User Name</div>
+            <div className="up-col">Email</div>
+            <div className="up-col">Role</div>
+            <div className="up-col">Status</div>
+            <div className="up-col up-actions"></div>
           </div>
 
           {paged.map((u, idx) => (
             <div
               key={u.id}
               className={
-                "table-row users-grid " + (selected === u.id ? "selected" : "")
+                "up-table-row up-users-grid " + (selected === u.id ? "up-selected" : "")
               }
               onClick={() => setSelected(u.id)}
             >
-              <div className="col no">{getRowNo(idx)}</div>
+              <div className="up-col up-no">{getRowNo(idx)}</div>
 
-              <div className="col user-name">{getFullName(u)}</div>
+              <div className="up-col up-user-name">{getFullName(u)}</div>
 
-              <div className="col">{u.email}</div>
+              <div className="up-col">{u.email}</div>
 
-              <div className="col">
-                <span className="role-badge">
+              <div className="up-col">
+                <span className="up-role-badge">
                   {rolesMap.get(u.roleId) || "Unknown"}
                 </span>
               </div>
 
-              <div className="col">
+              <div className="up-col">
                 <span
                   className={
-                    "status-badge " +
-                    (getUserStatus(u) === "Approved" ? "approved" : "pending")
+                    "up-status-badge " +
+                    (getUserStatus(u) === "Approved" ? "up-approved" : "up-pending")
                   }
                 >
                   {getUserStatus(u)}
                 </span>
               </div>
 
-              <div className="col actions">
+              <div className="up-col up-actions">
                 {getUserStatus(u) === "Pending" && (
                   <button
-                    className="icon-btn"
+                    className="up-icon-btn"
                     type="button"
                     title="Approve"
                     onClick={(e) => {
@@ -302,12 +303,12 @@ export default function UsersPage() {
                     }}
                   >
                     <img src="/check.svg" alt="approve" />
-                    <span className="btn-text"></span>
+                    <span className="up-btn-text"></span>
                   </button>
                 )}
                 
                 <button
-                  className="icon-btn"
+                  className="up-icon-btn"
                   type="button"
                   title="Edit"
                   onClick={(e) => {
@@ -316,11 +317,11 @@ export default function UsersPage() {
                   }}
                 >
                   <img src="/edit.svg" alt="edit" />
-                  <span className="btn-text"></span>
+                  <span className="up-btn-text"></span>
                 </button>
 
                 <button
-                  className="icon-btn"
+                  className="up-icon-btn"
                   type="button"
                   title="Delete"
                   onClick={(e) => {
@@ -329,45 +330,45 @@ export default function UsersPage() {
                   }}
                 >
                   <img src="/trash.svg" alt="delete" />
-                  <span className="btn-text"></span>
+                  <span className="up-btn-text"></span>
                 </button>
               </div>
             </div>
           ))}
 
           {paged.length === 0 && (
-            <div className="empty-state">No users found.</div>
+            <div className="up-empty-state">No users found.</div>
           )}
         </div>
 
-        <div className="mobile-only">
-          <div className="cards">
+        <div className="up-mobile-only">
+          <div className="up-cards">
             {paged.map((u, idx) => (
               <div
                 key={u.id}
-                className={"user-card " + (selected === u.id ? "selected" : "")}
+                className={"up-user-card " + (selected === u.id ? "up-selected" : "")}
                 onClick={() => setSelected(u.id)}
               >
-                <div className="user-card-top">
-                  <div className="user-title">
-                    <div className="user-no">{getRowNo(idx)}</div>
-                    <div className="user-name-mobile">{getFullName(u)}</div>
+                <div className="up-user-card-top">
+                  <div className="up-user-title">
+                    <div className="up-user-no">{getRowNo(idx)}</div>
+                    <div className="up-user-name-mobile">{getFullName(u)}</div>
                   </div>
 
                   <span
                     className={
-                      "status-badge " +
-                      (getUserStatus(u) === "Approved" ? "approved" : "pending")
+                      "up-status-badge " +
+                      (getUserStatus(u) === "Approved" ? "up-approved" : "up-pending")
                     }
                   >
                     {getUserStatus(u)}
                   </span>
                 </div>
 
-                <div className="user-email">{u.email}</div>
+                <div className="up-user-email">{u.email}</div>
 
-                <div className="user-pills">
-                  <span className="role-pill">
+                <div className="up-user-pills">
+                  <span className="up-role-pill">
                     {rolesMap.get(u.roleId) || "Unknown"}
                   </span>
 
@@ -381,10 +382,10 @@ export default function UsersPage() {
                   </span>
                 </div>
 
-                <div className="user-actions">
+                <div className="up-user-actions">
                   {getUserStatus(u) === "Pending" && (
                     <button
-                      className="icon-btn only-ico"
+                      className="up-icon-btn up-only-ico"
                       type="button"
                       title="Approve"
                       onClick={(e) => {
@@ -397,7 +398,7 @@ export default function UsersPage() {
                   )}
                   
                   <button
-                    className="icon-btn only-ico"
+                    className="up-icon-btn up-only-ico"
                     type="button"
                     title="Edit"
                     onClick={(e) => {
@@ -409,7 +410,7 @@ export default function UsersPage() {
                   </button>
 
                   <button
-                    className="icon-btn only-ico"
+                    className="up-icon-btn up-only-ico"
                     type="button"
                     title="Delete"
                     onClick={(e) => {
@@ -424,15 +425,15 @@ export default function UsersPage() {
             ))}
 
             {paged.length === 0 && (
-              <div className="empty-state">No users found.</div>
+              <div className="up-empty-state">No users found.</div>
             )}
           </div>
         </div>
 
-        <div className="card-bottom">
-          <div className="pagination">
+        <div className="up-card-bottom">
+          <div className="up-pagination">
             <button
-              className={"page-arrow " + (safePage === 1 ? "disabled" : "")}
+              className={"up-page-arrow " + (safePage === 1 ? "up-disabled" : "")}
               type="button"
               onClick={handlePrev}
             >
@@ -441,13 +442,13 @@ export default function UsersPage() {
 
             {pages.map((p, idx) =>
               p === "dots" ? (
-                <span className="dots" key={"d" + idx}>
+                <span className="up-dots" key={"d" + idx}>
                   …
                 </span>
               ) : (
                 <button
                   key={p}
-                  className={"page-btn " + (p === safePage ? "active" : "")}
+                  className={"up-page-btn " + (p === safePage ? "up-active" : "")}
                   type="button"
                   onClick={() => setPage(p)}
                 >
@@ -458,7 +459,7 @@ export default function UsersPage() {
 
             <button
               className={
-                "page-arrow " + (safePage === totalPages ? "disabled" : "")
+                "up-page-arrow " + (safePage === totalPages ? "up-disabled" : "")
               }
               type="button"
               onClick={handleNext}
@@ -471,17 +472,17 @@ export default function UsersPage() {
 
       {/* Modal for Add/Edit */}
       {showModal && (
-        <div className="modal-overlay" onClick={handleCloseModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
+        <div className="up-modal-overlay" onClick={handleCloseModal}>
+          <div className="up-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="up-modal-header">
               <h2>{editingUser ? "Edit User" : "Add New User"}</h2>
-              <button className="modal-close" onClick={handleCloseModal}>
+              <button className="up-modal-close" onClick={handleCloseModal}>
                 ×
               </button>
             </div>
 
             <form onSubmit={handleSubmit}>
-              <div className="form-group">
+              <div className="up-form-group">
                 <label htmlFor="name">Name *</label>
                 <input
                   id="name"
@@ -493,7 +494,7 @@ export default function UsersPage() {
                 />
               </div>
 
-              <div className="form-group">
+              <div className="up-form-group">
                 <label htmlFor="surname">Surname *</label>
                 <input
                   id="surname"
@@ -505,7 +506,7 @@ export default function UsersPage() {
                 />
               </div>
 
-              <div className="form-group">
+              <div className="up-form-group">
                 <label htmlFor="fathersName">Father's Name</label>
                 <input
                   id="fathersName"
@@ -517,7 +518,7 @@ export default function UsersPage() {
                 />
               </div>
 
-              <div className="form-group">
+              <div className="up-form-group">
                 <label htmlFor="email">Email *</label>
                 <input
                   id="email"
@@ -529,7 +530,7 @@ export default function UsersPage() {
                 />
               </div>
 
-              <div className="form-group">
+              <div className="up-form-group">
                 <label htmlFor="roleId">Role *</label>
                 <select
                   id="roleId"
@@ -546,21 +547,21 @@ export default function UsersPage() {
                 </select>
               </div>
 
-              {formError && <div className="form-error">{formError}</div>}
+              {formError && <div className="up-form-error">{formError}</div>}
 
-              <div className="modal-actions">
+              <div className="up-modal-actions">
                 <button
                   type="button"
                   onClick={handleCloseModal}
                   disabled={submitting}
-                  className="btn-cancel"
+                  className="up-btn-cancel"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="btn-submit"
+                  className="up-btn-submit"
                 >
                   {submitting ? "Saving..." : editingUser ? "Update" : "Create"}
                 </button>

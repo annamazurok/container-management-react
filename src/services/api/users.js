@@ -27,6 +27,7 @@ export async function createUser(data) {
       surname: data.surname,
       fathersName: data.fathersName,
       roleId: data.roleId,
+      
     }),
   });
 }

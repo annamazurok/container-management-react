@@ -18,6 +18,23 @@ export default function ProductContainersPage() {
   const { containerTypes, loading: typesLoading } = useContainerTypes();
   const { units, loading: unitsLoading } = useUnits();
 
+  // Convert numeric status enum to string
+  const getStatusName = (status) => {
+    const statusMap = {
+      0: "Default",
+      1: "Active",
+      2: "Inactive",
+      3: "Maintenance",
+      4: "Disposed"
+    };
+    
+    // If it's already a string, return it
+    if (typeof status === "string") return status;
+    
+    // If it's a number, convert it
+    return statusMap[status] ?? "Default";
+  };
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -56,7 +73,7 @@ export default function ProductContainersPage() {
         volume: container.quantity && unit
           ? `${container.quantity} ${unit.title || unit.Title}` 
           : "-",
-        state: container.status ?? "Default",
+        state: getStatusName(container.status ?? container.Status ?? 0),
       };
     });
   }, [apiContainers, containerTypes, units, typesLoading, unitsLoading]);
