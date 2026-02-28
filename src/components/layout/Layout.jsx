@@ -5,8 +5,8 @@ import { useAuth } from "../../hooks/useAuth";
 export default function Layout() {
   const { user } = useAuth();
   console.log("Full user object:", user);
-  const isAdmin = user?.roleId === 1;
-  console.log("User roleId:", user?.roleId, "Is Admin:", isAdmin);
+  const isAdmin = user?.role === "Admin";
+  console.log("User role:", user?.role, "Is Admin:", isAdmin);
 
   return (
     <div className="layout">

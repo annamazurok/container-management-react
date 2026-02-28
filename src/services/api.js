@@ -34,10 +34,9 @@ export async function apiFetch(endpoint, options = {}) {
     }
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({}));
-      throw new Error(
-        error.message || `HTTP ${response.status}: ${response.statusText}`,
-      );
+  const error = await response.json().catch(() => ({}));
+  console.error("API Error details:", JSON.stringify(error)); // ✅ додай це
+  throw new Error(error.message || `HTTP ${response.status}: ${response.statusText}`);
     }
 
     if (response.status === 204) {

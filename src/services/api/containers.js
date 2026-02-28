@@ -66,9 +66,10 @@ export async function createContainer(data) {
     body: JSON.stringify({
       Name: data.Name,
       TypeId: data.TypeId,
-      ProductId: data.ProductId ?? 0,
-      Quantity: data.Quantity ?? 0,
-      UnitId: data.UnitId ?? 0,
+      // ✅ Виправлення
+      ProductId: data.ProductId || null,
+      Quantity: data.Quantity ?? null,
+      UnitId: data.UnitId || null,
       Notes: data.Notes,
     }),
   });
