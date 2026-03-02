@@ -6,6 +6,7 @@ import { getContainerTypeById } from "../../services/api/containerTypes";
 import { getProductById } from "../../services/api/products";
 import { getProductTypeById } from "../../services/api/productTypes";
 import { getUnitById } from "../../services/api/units";
+import { QRCodeSVG } from "qrcode.react";
 
 export default function ContainerDetailsPage() {
   const { id } = useParams();
@@ -176,7 +177,10 @@ export default function ContainerDetailsPage() {
 
             <div className="details-right">
               <div className="qr-box">
-                <img src="/qr.png" alt="qr" />
+                <QRCodeSVG
+                value={`${window.location.origin}/containerdetails/${id}`}
+                size={120}
+                />
               </div>
             </div>
           </div>
