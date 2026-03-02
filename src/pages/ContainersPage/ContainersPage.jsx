@@ -4,7 +4,7 @@ import { useContainers } from "../../hooks/useContainers";
 import { useContainerTypes } from "../../hooks/useContainerTypes";
 import { useProducts } from "../../hooks/useProducts";
 import { useUnits } from "../../hooks/useUnits";
-import { deleteContainer } from "../../services/api/containers";
+import { deleteContainer, updateContainer } from "../../services/api/containers";
 import { NavLink, useNavigate } from "react-router-dom";
 
 export default function ContainersPage() {
@@ -13,6 +13,7 @@ export default function ContainersPage() {
   const [selected, setSelected] = useState(null);
   const [sortBy, setSortBy] = useState("");
   const [deleting, setDeleting] = useState(false);
+  const [emptying, setEmptying] = useState(false);
 
   const [page, setPage] = useState(1);
   const pageSize = 6;
@@ -96,7 +97,11 @@ export default function ContainersPage() {
     productsLoading,
     unitsLoading,
   ]);
-
+  // Log container info for debugging
+  useEffect(() => {
+    console.log("Containers rendered:", containers);
+    console.log("API Containers:", apiContainers);
+  }, [containers, apiContainers]);
   const sorted = useMemo(() => {
     const list = [...containers];
 
@@ -212,6 +217,56 @@ export default function ContainersPage() {
     }
   }
 
+  async function handleEmpty(id) {
+    if (emptying) return;
+
+    const confirmed = window.confirm(
+      "Are you sure you want to empty this container?",
+    );
+    if (!confirmed) return;
+
+    console.log("Empty button clicked for container:", id);
+    console.log("apiContainers:", apiContainers);
+
+    // Find the container to get all its data
+    const container = apiContainers.find(c => {
+      const cId = c.id ?? c.Id;
+      console.log("Comparing:", cId, "===", id, "?", cId === id);
+      return cId === id;
+    });
+    
+    if (!container) {
+      alert("Container not found");
+      console.error("Container not found for id:", id);
+      return;
+    }
+
+    console.log("Found container:", container);
+
+    setEmptying(true);
+    try {
+      const updateData = {
+        Id: id,
+        Name: container.name ?? container.Name,
+        TypeId: container.typeId ?? container.TypeId,
+        ProductId: null,
+        Quantity: container.quantity ?? container.Quantity,
+        UnitId: container.unitId ?? container.UnitId,
+        Notes: container.notes ?? container.Notes,
+      };
+      console.log("Sending update data:", updateData);
+      
+      await updateContainer(updateData);
+      await refetch();
+      alert("Container emptied successfully!");
+    } catch (err) {
+      console.error("Error emptying container:", err);
+      alert("Failed to empty container: " + (err?.message || "Unknown error"));
+    } finally {
+      setEmptying(false);
+    }
+  }
+
   if (loading || typesLoading || productsLoading || unitsLoading) {
     return (
       <div className="containers-page">
@@ -322,6 +377,19 @@ export default function ContainersPage() {
                 <button
                   className="icon-btn"
                   type="button"
+                  title="Empty"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEmpty(item.id);
+                  }}
+                  disabled={emptying}
+                >
+                  <img src="/empty.svg" alt="empty" />
+                </button>
+
+                <button
+                  className="icon-btn"
+                  type="button"
                   title="Delete"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -387,6 +455,19 @@ export default function ContainersPage() {
                     }}
                   >
                     <img src="/box.svg" alt="history" />
+                  </button>
+
+                  <button
+                    className="icon-btn"
+                    type="button"
+                    title="Empty"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEmpty(item.id);
+                    }}
+                    disabled={emptying}
+                  >
+                    <img src="/empty.svg" alt="empty" />
                   </button>
 
                   <button

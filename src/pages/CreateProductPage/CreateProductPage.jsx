@@ -108,6 +108,7 @@ export default function CreateProductPage() {
             rows="3"
           />
 
+          <label className="date-label">Creation date</label>
           <input
             className="create-input"
             name="productionDate"
@@ -117,6 +118,7 @@ export default function CreateProductPage() {
             onChange={handleChange}
           />
 
+          <label className="date-label">Expiration date</label>
           <input
             className="create-input"
             name="expirationDate"
