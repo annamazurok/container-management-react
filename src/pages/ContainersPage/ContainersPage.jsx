@@ -250,6 +250,7 @@ export default function ContainersPage() {
         Name: container.name ?? container.Name,
         TypeId: container.typeId ?? container.TypeId,
         ProductId: null,
+        Status: container.status ?? container.Status ?? 0,
         Quantity: container.quantity ?? container.Quantity,
         UnitId: container.unitId ?? container.UnitId,
         Notes: container.notes ?? container.Notes,

@@ -44,8 +44,8 @@ export async function createContainer(data) {
     body: JSON.stringify({
       Name: data.Name,
       TypeId: data.TypeId,
-      // ✅ Виправлення
       ProductId: data.ProductId || null,
+      Status: data.Status,
       Quantity: data.Quantity ?? null,
       UnitId: data.UnitId || null,
       Notes: data.Notes,
