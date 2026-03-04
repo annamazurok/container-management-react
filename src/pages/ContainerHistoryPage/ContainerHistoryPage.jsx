@@ -43,7 +43,7 @@ export default function ContainerHistoryPage() {
   }
 
   function getProductName(productId) {
-    const product = products.find(p => p.id === productId);
+    const product = products.find(p => p.id == productId);
     return product ? product.name : "-";
   }
 
