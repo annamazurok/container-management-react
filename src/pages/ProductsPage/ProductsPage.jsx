@@ -2,11 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import "./ProductsPage.css";
 import { useProducts } from "../../hooks/useProducts";
 import { useProductTypes } from "../../hooks/useProductTypes";
+import { useAuth } from "../../hooks/useAuth";
 import { deleteProduct } from "../../services/api/products";
 import { useNavigate } from "react-router-dom";
 
 export default function ProductsPage() {
   const navigate = useNavigate();
+  const { isAdmin } = useAuth();
   const [selected, setSelected] = useState(null);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -141,13 +143,15 @@ export default function ProductsPage() {
                 />
               </div>
 
-              <button
-                className="add-product-btn"
-                type="button"
-                onClick={handleAdd}
-              >
-                + Add Product
-              </button>
+              {isAdmin() && (
+                <button
+                  className="add-product-btn"
+                  type="button"
+                  onClick={handleAdd}
+                >
+                  + Add Product
+                </button>
+              )}
             </div>
           </div>
 
@@ -194,17 +198,19 @@ export default function ProductsPage() {
                 </div>
 
                 <div className="col col-actions">
-                  <button
-                    className="icon-btn"
-                    type="button"
-                    title="Edit"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleEdit(item.id);
-                    }}
-                  >
-                    <img src="/edit.svg" alt="edit" />
-                  </button>
+                  {isAdmin() && (
+                    <button
+                      className="icon-btn"
+                      type="button"
+                      title="Edit"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEdit(item.id);
+                      }}
+                    >
+                      <img src="/edit.svg" alt="edit" />
+                    </button>
+                  )}
 
                   <button
                     className="icon-btn"
@@ -256,17 +262,19 @@ export default function ProductsPage() {
                     </button>
 
                     <div className="action-icons">
-                      <button
-                        className="icon-btn"
-                        type="button"
-                        title="Edit"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleEdit(item.id);
-                        }}
-                      >
-                        <img src="/edit.svg" alt="edit" />
-                      </button>
+                      {isAdmin() && (
+                        <button
+                          className="icon-btn"
+                          type="button"
+                          title="Edit"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEdit(item.id);
+                          }}
+                        >
+                          <img src="/edit.svg" alt="edit" />
+                        </button>
+                      )}
 
                       <button
                         className="icon-btn"

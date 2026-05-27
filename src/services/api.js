@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5189";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:7094";
 
 export async function apiFetch(endpoint, options = {}) {
   const url = `${API_BASE_URL}${endpoint}`;
@@ -34,10 +34,9 @@ export async function apiFetch(endpoint, options = {}) {
     }
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({}));
-      throw new Error(
-        error.message || `HTTP ${response.status}: ${response.statusText}`,
-      );
+  const error = await response.json().catch(() => ({}));
+  console.error("API Error details:", JSON.stringify(error)); // ✅ додай це
+  throw new Error(error.message || `HTTP ${response.status}: ${response.statusText}`);
     }
 
     if (response.status === 204) {

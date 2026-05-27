@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./ContainerHistoryPage.css";
 import { getContainerHistoryByContainerId } from "../../services/api/containerHistory";
+import { getAllProducts } from "../../services/api/products";
 
 export default function ContainerHistoryPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [selected, setSelected] = useState(null);
   const [history, setHistory] = useState([]);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -17,8 +19,13 @@ export default function ContainerHistoryPage() {
       setError(null);
 
       try {
-        const data = await getContainerHistoryByContainerId(id);
-        setHistory(data);
+        const [historyData, productsData] = await Promise.all([
+          getContainerHistoryByContainerId(id),
+          getAllProducts()
+        ]);
+        console.log("Container History Data:", historyData);
+        setHistory(historyData);
+        setProducts(productsData);
       } catch (err) {
         setError(err.message || "Failed to load container history");
       } finally {
@@ -35,11 +42,16 @@ export default function ContainerHistoryPage() {
     navigate("/containers");
   }
 
+  function getProductName(productId) {
+    const product = products.find(p => p.id == productId);
+    return product ? product.name : "-";
+  }
+
   if (loading) {
     return (
-      <div className="history-page">
-        <div className="history-card">
-          <div className="loading-message">Loading history...</div>
+      <div className="ch-history-page">
+        <div className="ch-history-card">
+          <div className="ch-loading-message">Loading history...</div>
         </div>
       </div>
     );
@@ -47,10 +59,10 @@ export default function ContainerHistoryPage() {
 
   if (error) {
     return (
-      <div className="history-page">
-        <div className="history-card">
-          <div className="error-message">Error: {error}</div>
-          <button className="back-btn" type="button" onClick={handleBack}>
+      <div className="ch-history-page">
+        <div className="ch-history-card">
+          <div className="ch-error-message">Error: {error}</div>
+          <button className="ch-back-btn" type="button" onClick={handleBack}>
             ← Back to Containers
           </button>
         </div>
@@ -59,54 +71,46 @@ export default function ContainerHistoryPage() {
   }
 
   return (
-    <div className="history-page">
-      <div className="history-card">
-        <button className="back-btn" type="button" onClick={handleBack}>
+    <div className="ch-history-page">
+      <div className="ch-history-card">
+        <button className="ch-back-btn" type="button" onClick={handleBack}>
           ← Back to Containers
         </button>
 
-        <div className="history-top">
-          <h1 className="history-title">History of Container Contents</h1>
+        <div className="ch-history-top">
+          <h1 className="ch-history-title">History of Container Contents</h1>
 
-          <button className="dots-btn" type="button" title="More">
-            <span className="dot"></span>
-            <span className="dot"></span>
-            <span className="dot"></span>
+          <button className="ch-dots-btn" type="button" title="More">
+            <span className="ch-dot"></span>
+            <span className="ch-dot"></span>
+            <span className="ch-dot"></span>
           </button>
         </div>
 
         {history.length === 0 ? (
-          <div className="empty-state">No history records found for this container.</div>
+          <div className="ch-empty-state">No history records found for this container.</div>
         ) : (
-          <div className="history-table">
-            <div className="history-head">
-              <div className="col no">No</div>
-              <div className="col type">Action</div>
-              <div className="col date">Date</div>
-              <div className="col storage">Product</div>
-              <div className="col desc">Description</div>
-              <div className="col created">Record Created</div>
-              <div className="col changed">Last Change</div>
+          <div className="ch-history-table">
+            <div className="ch-history-head">
+              <div className="ch-col ch-no">No</div>
+              <div className="ch-col ch-type">Action</div>
+              <div className="ch-col ch-storage">Product</div>
+              <div className="ch-col ch-desc">Description</div>
+              <div className="ch-col ch-created">Record Created</div>
             </div>
 
             {history.map((record, index) => (
               <div
                 key={record.id}
-                className={"history-row " + (selected === record.id ? "selected" : "")}
+                className={"ch-history-row " + (selected === record.id ? "ch-selected" : "")}
                 onClick={() => setSelected(record.id)}
               >
-                <div className="col no big">{String(index + 1).padStart(2, "0")}</div>
-                <div className="col type strong">{record.actionType || "Unknown"}</div>
-                <div className="col date">
-                  {record.actionDate ? new Date(record.actionDate).toLocaleDateString() : "-"}
-                </div>
-                <div className="col storage muted">{record.productId || "-"}</div>
-                <div className="col desc strong">{record.notes || "-"}</div>
-                <div className="col created">
+                <div className="ch-col ch-no ch-big">{String(index + 1).padStart(2, "0")}</div>
+                <div className="ch-col ch-type ch-strong">{record.actionType || "Unknown"}</div>
+                <div className="ch-col ch-storage ch-muted">{getProductName(record.productId)}</div>
+                <div className="ch-col ch-desc ch-strong">{record.notes || "-"}</div>
+                <div className="ch-col ch-created">
                   {record.createdAt ? new Date(record.createdAt).toLocaleDateString() : "-"}
-                </div>
-                <div className="col changed">
-                  {record.updatedAt ? new Date(record.updatedAt).toLocaleDateString() : "-"}
                 </div>
               </div>
             ))}

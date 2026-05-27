@@ -6,6 +6,7 @@ import { getContainerTypeById } from "../../services/api/containerTypes";
 import { getProductById } from "../../services/api/products";
 import { getProductTypeById } from "../../services/api/productTypes";
 import { getUnitById } from "../../services/api/units";
+import { QRCodeSVG } from "qrcode.react";
 
 export default function ContainerDetailsPage() {
   const { id } = useParams();
@@ -17,6 +18,23 @@ export default function ContainerDetailsPage() {
   const [unit, setUnit] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Convert numeric status enum to string
+  const getStatusName = (status) => {
+    const statusMap = {
+      0: "Default",
+      1: "Active",
+      2: "Inactive",
+      3: "Maintenance",
+      4: "Disposed"
+    };
+    
+    // If it's already a string, return it
+    if (typeof status === "string") return status;
+    
+    // If it's a number, convert it
+    return statusMap[status] ?? "Default";
+  };
 
   useEffect(() => {
     async function fetchContainerDetails() {
@@ -133,7 +151,7 @@ export default function ContainerDetailsPage() {
               <div className="details-title-row">
                 <h2 className="details-title">{container.code}</h2>
                 <span className="details-status">
-                  {container.status || "Default"}
+                  {getStatusName(container.status ?? container.Status ?? 0)}
                 </span>
               </div>
 
@@ -159,7 +177,10 @@ export default function ContainerDetailsPage() {
 
             <div className="details-right">
               <div className="qr-box">
-                <img src="/qr.png" alt="qr" />
+                <QRCodeSVG
+                value={`${window.location.origin}/containerdetails/${id}`}
+                size={120}
+                />
               </div>
             </div>
           </div>

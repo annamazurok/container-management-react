@@ -195,20 +195,17 @@ export default function EditContainerPage() {
 
     try {
       const typeIdNum = Number(form.typeId);
-      const productIdNum = form.productId ? Number(form.productId) : 0;
+      const productIdNum = form.productId ? Number(form.productId) : null;
 
       await updateContainer({
         Id: Number(id),
         Name: name,
-
         TypeId: typeIdNum,
         ContainerTypeId: typeIdNum,
-
-        ProductId: productIdNum,
-        Quantity: q,
-
-        UnitId: typeUnitId || 0,
-        Notes: form.notes?.trim() ? form.notes.trim() : null,
+        ProductId: productIdNum || null,        // ✅
+        Quantity: q !== "" && q !== undefined ? q : null,                    // ✅
+        UnitId: typeUnitId || null,             // ✅
+        Notes: form.notes?.trim() || null,
       });
 
       alert("Container updated successfully!");

@@ -1,51 +1,29 @@
 import { apiFetch } from "../api";
 
-/**
- * Get all containers
- */
 export async function getAllContainers() {
   return apiFetch("/containers");
 }
 
-/**
- * Get container by ID
- */
 export async function getContainerById(containerId) {
   return apiFetch(`/containers/${containerId}`);
 }
 
-/**
- * Get container by name
- */
 export async function getContainerByName(name) {
   return apiFetch(`/containers/name/${encodeURIComponent(name)}`);
 }
 
-/**
- * Get container by code
- */
 export async function getContainerByCode(code) {
   return apiFetch(`/containers/code/${encodeURIComponent(code)}`);
 }
 
-/**
- * Get containers by type ID
- */
 export async function getContainersByType(typeId) {
   return apiFetch(`/containers/type/${typeId}`);
 }
 
-/**
- * Get containers by product ID
- */
 export async function getContainersByProduct(productId) {
   return apiFetch(`/containers/product/${productId}`);
 }
 
-/**
- * Get containers by status
- * Status values: Default, Active, Inactive, Maintenance, Disposed
- */
 export async function getContainersByStatus(status) {
   return apiFetch(`/containers/status/${status}`);
 }
@@ -66,9 +44,10 @@ export async function createContainer(data) {
     body: JSON.stringify({
       Name: data.Name,
       TypeId: data.TypeId,
-      ProductId: data.ProductId ?? 0,
-      Quantity: data.Quantity ?? 0,
-      UnitId: data.UnitId ?? 0,
+      ProductId: data.ProductId || null,
+      Status: data.Status,
+      Quantity: data.Quantity ?? null,
+      UnitId: data.UnitId || null,
       Notes: data.Notes,
     }),
   });

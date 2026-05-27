@@ -14,7 +14,7 @@ export function useContainers() {
   const fetchContainers = useCallback(async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const data = await getAllContainers();
       setContainers(data);
@@ -24,13 +24,9 @@ export function useContainers() {
       setLoading(false);
     }}, []);
 
-  /**
-   * Створити новий контейнер
-   */
   const handleCreate = async (data) => {
     try {
       const newContainer = await createContainer(data);
-      // Оновлюємо локальний стан
       setContainers((prev) => [...prev, newContainer]);
       return { success: true, data: newContainer };
     } catch (err) {
@@ -41,7 +37,6 @@ export function useContainers() {
     const handleUpdate = async (data) => {
     try {
       const updated = await updateContainer(data);
-      // Оновлюємо локальний стан
       setContainers((prev) =>
         prev.map((container) =>
           container.id === updated.id ? updated : container
@@ -53,13 +48,9 @@ export function useContainers() {
     }
   };
 
-  /**
-   * Видалити контейнер
-   */
   const handleDelete = async (containerId) => {
     try {
       await deleteContainer(containerId);
-      // Оновлюємо локальний стан
       setContainers((prev) =>
         prev.filter((container) => container.id !== containerId)
       );
@@ -74,12 +65,12 @@ export function useContainers() {
   }, [fetchContainers]);
 
   return {
-    containers,           // Список контейнерів
-    loading,              // Стан завантаження
-    error,                // Помилка (якщо є)
-    refetch: fetchContainers,  // Перезавантажити дані
-    createContainer: handleCreate,  // Створити контейнер
-    updateContainer: handleUpdate,  // Оновити контейнер
-    deleteContainer: handleDelete,  // Видалити контейнер
+    containers,
+    loading,
+    error,
+    refetch: fetchContainers,
+    createContainer: handleCreate,
+    updateContainer: handleUpdate,
+    deleteContainer: handleDelete,
   };
 }

@@ -24,5 +24,5 @@ export async function loginWithGoogle(googleIdToken) {
  * Отримати дані поточного користувача
  */
 export async function getCurrentUser() {
-  return apiFetch("/auth/me");
+  return await apiFetch("/auth/me");
 }
